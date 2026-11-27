@@ -14,7 +14,7 @@
     diClick: 'left', diSpd: 'right', click: 'right', spd: 'right',
     tbMain: 'left', tbBand: 'above', keys: 'left', aux: 'right', electric: 'below', bass: 'right', mal: 'below', joji: 'right',
     yellow: 'left', wireless: 'right', roomL: 'above', roomR: 'right',
-    p16Keys: 'right', p16Aux: 'below', p16Elec: 'right', p16Bass: 'right', p16Mal: 'left', p16Drums: 'right',
+    p16Keys: 'right', p16Aux: 'below', p16Elec: 'right', p16Bass: 'right', p16Mal: 'left', p16Drums: 'left',
     leftSub: 'below', rightSub: 'below', mainSnake: 'above', monMixer: 'below', p16d: 'below', router: 'below',
     receivers: 'below', drumSub: 'left', drumTB: 'right', kit: 'below',
     mac: 'below', x32: 'left', amps: 'left', stream: 'below',

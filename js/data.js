@@ -303,7 +303,7 @@ window.STOPS = {
   p16Elec:  { label: 'P16', x: 480, y: 130, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'electric', what: 'The electric guitarist\'s personal mixer.', ours: 'Fed from the P16-D.' },
   p16Bass:  { label: 'P16', x: 720, y: 120, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'bass', what: 'The bassist\'s personal mixer.', ours: 'Fed from the P16-D.' },
   p16Mal:   { label: 'P16', x: 735, y: 290, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'Malayalam keys', what: 'The Malayalam keys player\'s personal mixer.', ours: 'Behind and to the right of the Malayalam keys. Fed from the P16-D.' },
-  p16Drums: { label: 'P16', x: 840, y: 305, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'drums', what: 'The drummer\'s personal mixer.', ours: 'On the left side of the drum cage. Fed from the P16-D.' },
+  p16Drums: { label: 'P16', x: 1080, y: 250, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'drums', what: 'The drummer\'s personal mixer.', ours: 'On the right side of the drum cage. Fed from the P16-D.' },
 
   /* ---------- FOH ---------- */
   x32: {
@@ -435,7 +435,7 @@ window.WIRES = [
   ['p16d', 'p16Elec', 'digital', [[820, 115], [820, 36], [480, 36]]],
   ['p16d', 'p16Bass', 'digital', [[820, 115], [820, 36], [720, 36]]],
   ['p16d', 'p16Mal', 'digital', [[820, 115], [820, 36], [735, 36]]],
-  ['p16d', 'p16Drums', 'digital'],
+  ['p16d', 'p16Drums', 'digital', [[835, 226], [1095, 226], [1095, 250]]],
   ['monMixer', 'xvive', 'monitor', [[990, 30], [58, 30]]],
   ['xvive', 'red', 'wireless'], ['xvive', 'green', 'wireless'], ['xvive', 'joji', 'wireless'],
   ['xvive', 'blue', 'wireless'], ['xvive', 'yellow', 'wireless']
