@@ -10,15 +10,15 @@
 
   // Label positions that differ from the default (below the dot).
   const LABEL = {
-    diKeys: 'left', diAux: 'left', diElec: 'right', diBass: 'right', diMal: 'left',
+    diKeys: 'left', diAux: 'above', diElec: 'right', diBass: 'right', diMal: 'left',
     diClick: 'left', diSpd: 'right', click: 'right', spd: 'right',
-    tbMain: 'left', tbBand: 'left', keys: 'left', aux: 'right', electric: 'below', bass: 'right', mal: 'right', joji: 'right',
-    yellow: 'left', wireless: 'right', roomL: 'above', roomR: 'above',
-    p16Keys: 'right', p16Aux: 'left', p16Elec: 'right', p16Bass: 'right', p16Mal: 'left', p16Drums: 'right',
+    tbMain: 'left', tbBand: 'above', keys: 'left', aux: 'right', electric: 'below', bass: 'right', mal: 'below', joji: 'right',
+    yellow: 'left', wireless: 'right', roomL: 'above', roomR: 'right',
+    p16Keys: 'right', p16Aux: 'below', p16Elec: 'right', p16Bass: 'right', p16Mal: 'left', p16Drums: 'right',
     leftSub: 'below', rightSub: 'below', mainSnake: 'above', monMixer: 'below', p16d: 'below', router: 'below',
-    receivers: 'below', drumSub: 'left', drumTB: 'below', kit: 'below',
+    receivers: 'below', drumSub: 'left', drumTB: 'right', kit: 'below',
     mac: 'below', x32: 'left', amps: 'left', stream: 'below',
-    mainL: 'left', subL: 'left', monL: 'left', mainR: 'left', subR: 'left', monR: 'left'
+    mainL: 'left', subL: 'left', monL: 'left', mainR: 'left', subR: 'right', monR: 'left'
   };
 
   const el = (tag, attrs = {}, parent) => {
@@ -57,7 +57,7 @@
       const g = el('g', { class: 'area ' + a.id }, root);
       el('rect', { x: a.x, y: a.y, width: a.w, height: a.h, rx: 10 }, g);
       if (a.door) el('line', { class: 'door', x1: a.door[0], y1: a.door[1], x2: a.door[2], y2: a.door[3] }, g);
-      const bottom = a.id === 'stage' || a.id === 'foh';
+      const bottom = a.id === 'stage' || a.id === 'foh' || a.id === 'drums';
       const right = a.id === 'drums';
       if (a.id !== 'stage') el('text', { x: right ? a.x + a.w - 12 : a.x + 12, y: bottom ? a.y + a.h - 14 : a.y + 24, 'text-anchor': right ? 'end' : 'start' }, g).textContent = a.label;
     }
