@@ -322,20 +322,48 @@
   }
 
   /* ---------- highlighting ---------- */
-  function chainOf(id) {
+  // What lights up when a stop is clicked: its path to the FOH X32, then every
+  // destination its inputs feed (see DESTINATIONS and SENDS in data.js).
+  const wireIndex = (f, t) => { const w = wires.find(x => x.from === f && x.to === t); return w ? w.i : -1; };
+  function routeOf(id) {
     const on = new Set();
-    const walk = (n, dir) => {
+    const sources = new Set();
+    let reachesHub = false;
+    const addDests = keys => keys.forEach(k => DESTINATIONS[k].wires.forEach(([f, t]) => { const i = wireIndex(f, t); if (i >= 0) on.add(i); }));
+    if (id === HUB) {
+      wires.forEach(w => { if (w.from === HUB || w.to === HUB) on.add(w.i); });
+      const all = Object.keys(DESTINATIONS);
+      addDests(all);
+      return { on, dests: all };
+    }
+    if (STOPS[id].kind === 'source') sources.add(id);
+    const up = n => {
       for (const w of wires) {
-        const hit = dir === 'up' ? w.to === n : w.from === n;
-        if (!hit || on.has(w.i)) continue;
+        // The wireless link from the in-ear transmitters is a return to the singer, not where their mic comes from.
+        if (w.to !== n || w.from === 'xvive' || on.has(w.i)) continue;
         on.add(w.i);
-        const next = dir === 'up' ? w.from : w.to;
-        if (next !== HUB) walk(next, dir);
+        if (w.from === HUB) continue;
+        if (STOPS[w.from].kind === 'source') sources.add(w.from);
+        up(w.from);
       }
     };
-    if (id === HUB) wires.forEach(w => { if (w.from === HUB || w.to === HUB) on.add(w.i); });
-    else { walk(id, 'up'); walk(id, 'down'); }
-    return on;
+    const down = n => {
+      for (const w of wires) {
+        if (w.from !== n || on.has(w.i)) continue;
+        on.add(w.i);
+        if (w.to === HUB) { reachesHub = true; continue; }
+        if (w.from === 'xvive') continue; // stop at the singer's ears
+        down(w.to);
+      }
+    };
+    up(id);
+    down(id);
+    if (!reachesHub) return { on, dests: [] };
+    const dests = new Set();
+    sources.forEach(src => (SENDS[src] || SENDS.default).forEach(k => dests.add(k)));
+    const list = Object.keys(DESTINATIONS).filter(k => dests.has(k));
+    addDests(list);
+    return { on, dests: list };
   }
 
   function light(onSet, selected) {
@@ -389,19 +417,32 @@
     };
   }
 
-  function renderStop(id, partId) {
+  function goesTo(dests) {
+    const p = h('p', 'goes');
+    p.appendChild(h('span', 'goes-label', 'Goes to'));
+    dests.forEach(k => {
+      const d = h('span', 'dest', DESTINATIONS[k].label);
+      d.title = DESTINATIONS[k].note;
+      p.appendChild(d);
+    });
+    return p;
+  }
+
+  function renderStop(id, partId, dests) {
+    if (dests === undefined) dests = routeOf(id).dests;
     const s = STOPS[id];
     const t = s.kind === 'p16' ? Object.assign({}, s, p16Text(s)) : s;
     panel.replaceChildren();
     panel.appendChild(tag(s.signal));
     panel.appendChild(h('h2', null, s.kind === 'p16' ? 'P16, ' + s.for : s.label));
     panel.appendChild(chLine(s.ch, s.gear));
+    if (dests.length) panel.appendChild(goesTo(dests));
 
     if (s.parts) {
       const chips = h('div', 'chips');
       s.parts.forEach(p => {
         const c = h('button', 'chip' + (p.id === partId ? ' on' : ''), p.label);
-        c.addEventListener('click', () => renderStop(id, p.id === partId ? null : p.id));
+        c.addEventListener('click', () => renderStop(id, p.id === partId ? null : p.id, dests));
         chips.appendChild(c);
       });
       panel.appendChild(chips);
@@ -506,9 +547,10 @@
       if (narrow()) { setSheet('peek'); fitAll(); }
       return;
     }
-    const chain = chainOf(id);
+    const route = routeOf(id);
+    const chain = route.on;
     const lit = light(chain, id);
-    renderStop(id);
+    renderStop(id, null, route.dests);
     setHash(id);
     showSheet();
     focus(boxOf([...lit], chain));

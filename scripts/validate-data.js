@@ -12,7 +12,7 @@ const vm = require('vm');
 const file = path.join(__dirname, '..', 'js', 'data.js');
 const sandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync(file, 'utf8'), sandbox, { filename: 'js/data.js' });
-const { SIGNALS, AREAS, STOPS, WIRES, TOURS, CONSOLE } = sandbox.window;
+const { SIGNALS, AREAS, STOPS, WIRES, TOURS, CONSOLE, DESTINATIONS, SENDS } = sandbox.window;
 
 const errors = [];
 const fail = msg => errors.push(msg);
@@ -24,7 +24,7 @@ if (!vb) fail('index.html: could not find the stage viewBox');
 const W = vb ? Number(vb[1]) : Infinity;
 const H = vb ? Number(vb[2]) : Infinity;
 
-for (const name of ['SIGNALS', 'AREAS', 'STOPS', 'WIRES', 'TOURS', 'CONSOLE']) {
+for (const name of ['SIGNALS', 'AREAS', 'STOPS', 'WIRES', 'TOURS', 'CONSOLE', 'DESTINATIONS', 'SENDS']) {
   if (!sandbox.window[name]) fail(`data.js: window.${name} is missing`);
 }
 
@@ -63,6 +63,18 @@ for (const t of TOURS || []) {
     if (!STOPS[s]) fail(`tour "${t.id}": no stop called "${s}"`);
     else if (i > 0 && !connected(t.stops[i - 1], s)) fail(`tour "${t.id}": no cable between "${t.stops[i - 1]}" and "${s}"`);
   });
+}
+
+for (const [key, d] of Object.entries(DESTINATIONS || {})) {
+  if (!d.label) fail(`destination "${key}": missing label`);
+  for (const [f, t] of d.wires || []) {
+    if (!(WIRES || []).some(([wf, wt]) => wf === f && wt === t)) fail(`destination "${key}": no cable from "${f}" to "${t}"`);
+  }
+}
+for (const [id, list] of Object.entries(SENDS || {})) {
+  if (id !== 'default' && !STOPS[id]) fail(`sends: no stop called "${id}"`);
+  if (id !== 'default' && STOPS[id] && STOPS[id].kind !== 'source') fail(`sends: "${id}" is not an input`);
+  for (const k of list) if (!(DESTINATIONS || {})[k]) fail(`sends for "${id}": unknown destination "${k}"`);
 }
 
 for (const a of AREAS || []) {
