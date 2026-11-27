@@ -10,13 +10,15 @@
 
   // Label positions that differ from the default (below the dot).
   const LABEL = {
-    diKeys: 'right', diAux: 'right', diElec: 'right',
-    diClick: 'left', diSpd: 'left', click: 'left', spd: 'left', diBass: 'left',
-    tb: 'above', keys: 'right', aux: 'above', electric: 'left', bass: 'left', mal: 'right', joji: 'right', diMal: 'above',
-    p16Keys: 'left', p16Aux: 'left', p16Elec: 'right', p16Bass: 'right', p16Mal: 'right', p16Drums: 'right',
-    leftSub: 'above', rightSub: 'above', mainSnake: 'above', monMixer: 'above', p16d: 'below', router: 'above',
-    receivers: 'right', drumSub: 'below', drumTB: 'right', kit: 'above',
-    roomL: 'below', roomR: 'below', mac: 'below', x32: 'below', outputs: 'below'
+    diKeys: 'left', diAux: 'left', diElec: 'right', diBass: 'right', diMal: 'above',
+    diClick: 'left', diSpd: 'left', click: 'left', spd: 'left',
+    tb: 'above', keys: 'right', aux: 'right', electric: 'left', bass: 'left', mal: 'below', joji: 'right',
+    yellow: 'right', wireless: 'right', roomL: 'above', roomR: 'above',
+    p16Keys: 'left', p16Aux: 'left', p16Elec: 'right', p16Bass: 'right', p16Mal: 'left', p16Drums: 'right',
+    leftSub: 'above', rightSub: 'above', mainSnake: 'below', monMixer: 'below', p16d: 'below', router: 'above',
+    receivers: 'below', drumSub: 'below', drumTB: 'right', kit: 'above',
+    mac: 'right', x32: 'left', amps: 'below', stream: 'above',
+    mainL: 'left', subL: 'left', monL: 'left', mainR: 'left', subR: 'left', monR: 'left'
   };
 
   const el = (tag, attrs = {}, parent) => {
@@ -48,14 +50,15 @@
     const root = el('g', { transform: 'translate(0,30)' }, svg);
 
     const grid = el('g', { class: 'grid' }, root);
-    for (let x = 0; x <= 1140; x += 40) el('line', { x1: x, y1: -30, x2: x, y2: 700 }, grid);
-    for (let y = -30; y <= 700; y += 40) el('line', { x1: 0, y1: y, x2: 1140, y2: y }, grid);
+    for (let x = 0; x <= 1140; x += 40) el('line', { x1: x, y1: -30, x2: x, y2: 720 }, grid);
+    for (let y = -30; y <= 720; y += 40) el('line', { x1: 0, y1: y, x2: 1140, y2: y }, grid);
 
     for (const a of AREAS) {
       const g = el('g', { class: 'area ' + a.id }, root);
       el('rect', { x: a.x, y: a.y, width: a.w, height: a.h, rx: 10 }, g);
-      const bottom = a.id === 'side' || a.id === 'stage' || a.id === 'snake';
-      el('text', { x: a.x + 12, y: bottom ? a.y + a.h - 14 : a.y + 24 }, g).textContent = a.label;
+      const bottom = a.id === 'side' || a.id === 'stage' || a.id === 'drums' || a.id === 'foh';
+      const right = a.id === 'foh';
+      el('text', { x: right ? a.x + a.w - 12 : a.x + 12, y: bottom ? a.y + a.h - 14 : a.y + 24, 'text-anchor': right ? 'end' : 'start' }, g).textContent = a.label;
     }
     el('line', { class: 'front', x1: 115, y1: 405, x2: 765, y2: 405 }, root);
     el('text', { class: 'note', x: 820, y: 560, 'text-anchor': 'middle' }, root).textContent = 'Congregation';

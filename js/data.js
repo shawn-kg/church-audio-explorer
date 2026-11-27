@@ -29,7 +29,7 @@ window.AREAS = [
   { id: 'stage', label: 'Stage',               x: 115, y: 60,  w: 650, h: 345 },
   { id: 'snake', label: 'Snake room',          x: 810, y: 50,  w: 290, h: 210 },
   { id: 'drums', label: 'Drum cage',           x: 810, y: 280, w: 290, h: 200 },
-  { id: 'foh',   label: 'FOH booth',           x: 150, y: 580, w: 360, h: 90 }
+  { id: 'foh',   label: 'FOH booth',           x: 150, y: 570, w: 360, h: 130 }
 ];
 
 const VOCAL = (name, ch, sub, who) => ({
@@ -50,7 +50,7 @@ window.STOPS = {
     wrong: 'Only the left side sounds: the keyboard may be set to mono output, or one cable is unplugged. Hum: try the ground lift switch on the DI.'
   },
   diKeys: {
-    label: 'DI', x: 255, y: 150, ch: [17, 18], gear: 'Radial stereo DI', signal: 'mic', kind: 'di',
+    label: 'DI', x: 235, y: 75, ch: [17, 18], gear: 'Radial stereo DI', signal: 'mic', kind: 'di',
     what: 'A direct injection (DI) box. It converts an unbalanced instrument signal into a balanced, mic-level signal.',
     flow: 'This is where the line on the stage changes color. Amber instrument-level signal goes in on 1/4"; cyan balanced mic-level signal comes out on XLR, ready for a long cable run without picking up noise.',
     ours: 'One stereo Radial DI takes both keys outputs and sends two XLRs to the left sub snake.',
@@ -65,7 +65,7 @@ window.STOPS = {
     wrong: 'If the aux keys P16 goes silent, check the keys P16 first: the aux one gets its signal through it.'
   },
   diAux: {
-    label: 'DI', x: 190, y: 265, ch: [21, 22], gear: 'Radial DI', signal: 'mic', kind: 'di',
+    label: 'DI', x: 135, y: 180, ch: [21, 22], gear: 'Radial DI', signal: 'mic', kind: 'di',
     what: 'A DI box for the aux keys.',
     flow: 'Converts the two unbalanced keyboard outputs into two balanced, mic-level XLR signals.',
     ours: 'Left and right sides feed channels 21 and 22 on the left sub snake.',
@@ -81,15 +81,15 @@ window.STOPS = {
     confirm: ['What the rig is (amp modeler, pedalboard), and whether it outputs at instrument or line level.']
   },
   diElec: {
-    label: 'DIs', x: 440, y: 150, ch: [19, 20], gear: 'Two Behringer mono DIs', signal: 'mic', kind: 'di',
+    label: 'DIs', x: 410, y: 72, ch: [19, 20], gear: 'Two Behringer mono DIs', signal: 'mic', kind: 'di',
     what: 'Two mono DI boxes, one for each side of the guitar rig.',
     flow: 'Each converts one unbalanced output into one balanced, mic-level XLR signal.',
     ours: 'Feed channels 19 and 20 on the left sub snake.',
     wrong: 'If one is an active DI and its battery dies, that side goes silent. Phantom power on the channel can also run it.',
     confirm: ['Behringer model (for example DI100 active or DI400P passive).']
   },
-  red: Object.assign(VOCAL('Red', 13, 'left sub snake', 'red'), { x: 215, y: 350 }),
-  green: Object.assign(VOCAL('Green', 14, 'left sub snake', 'green'), { x: 335, y: 355 }),
+  red: Object.assign(VOCAL('Red', 13, 'left sub snake', 'red'), { x: 215, y: 300 }),
+  green: Object.assign(VOCAL('Green', 14, 'left sub snake', 'green'), { x: 335, y: 300 }),
   leftSub: {
     label: 'Left sub snake', x: 325, y: 100, gear: '8-channel sub snake', signal: 'mic', kind: 'snake',
     what: 'A small box with eight XLR inputs, joined into one multicore cable.',
@@ -108,7 +108,7 @@ window.STOPS = {
     wrong: 'No bass at all: the J48 needs phantom power from channel 23 to run. Check the 48V switch first.'
   },
   diBass: {
-    label: 'J48', x: 690, y: 150, ch: [23], gear: 'Radial J48 active DI', signal: 'mic', kind: 'di',
+    label: 'J48', x: 660, y: 72, ch: [23], gear: 'Radial J48 active DI', signal: 'mic', kind: 'di',
     what: 'An active DI box. It has electronics inside that need power.',
     flow: 'It takes its power from the console\'s 48V phantom power, sent back up the XLR cable. It converts the bass\'s weak signal into a strong, balanced mic-level signal.',
     ours: 'Feeds channel 23 on the right sub snake. Phantom power (48V) must be on for channel 23 at the FOH X32.',
@@ -122,7 +122,7 @@ window.STOPS = {
     wrong: 'Same as the other keys: check for mono output mode, and use the ground lift for hum.'
   },
   diMal: {
-    label: 'DIs', x: 735, y: 250, ch: [31, 32], gear: 'Two Radial mono DIs', signal: 'mic', kind: 'di',
+    label: 'DIs', x: 745, y: 175, ch: [31, 32], gear: 'Two Radial mono DIs', signal: 'mic', kind: 'di',
     what: 'Two mono DI boxes, one for each side of the Malayalam keys.',
     flow: 'Each converts one unbalanced output into one balanced, mic-level XLR signal.',
     ours: 'Feed channels 31 and 32 on the right sub snake.',
@@ -142,14 +142,14 @@ window.STOPS = {
     ]
   },
   joji: {
-    label: 'Joji', x: 450, y: 385, ch: [12], gear: 'Shure KSM9', signal: 'mic', kind: 'source',
+    label: 'Joji', x: 470, y: 370, ch: [12], gear: 'Shure KSM9', signal: 'mic', kind: 'source',
     what: 'A handheld condenser vocal mic, used by a singer who brings his own.',
     flow: 'Unlike the 58s, a condenser has electronics inside that need 48V phantom power from the console. It is more detailed and more sensitive, so it needs less gain.',
     ours: 'Ch 12, at the front of the stage, into the right sub snake. The KSM9 has a switch for cardioid or supercardioid pickup.',
     wrong: 'Silent: 48V phantom power is off on channel 12. Because it is more sensitive than a 58, it can feed back sooner in a wedge.'
   },
-  blue: Object.assign(VOCAL('Blue', 15, 'right sub snake', 'blue'), { x: 565, y: 355 }),
-  yellow: Object.assign(VOCAL('Yellow', 16, 'right sub snake', 'yellow'), { x: 685, y: 350 }),
+  blue: Object.assign(VOCAL('Blue', 15, 'right sub snake', 'blue'), { x: 565, y: 300 }),
+  yellow: Object.assign(VOCAL('Yellow', 16, 'right sub snake', 'yellow'), { x: 685, y: 300 }),
   rightSub: {
     label: 'Right sub snake', x: 565, y: 100, gear: '8-channel sub snake', signal: 'mic', kind: 'snake',
     what: 'The second 8-input sub snake, on the right of the stage.',
@@ -161,26 +161,26 @@ window.STOPS = {
 
   /* ---------- Front of house (the congregation side) ---------- */
   roomL: {
-    label: 'Room mic L', x: 140, y: 445, ch: [5], gear: 'Rode mic', signal: 'mic', kind: 'source',
-    what: 'A mic on the left side of the stage, pointed at the congregation.',
+    label: 'Room mic L', x: 200, y: 385, ch: [5], gear: 'Rode mic', signal: 'mic', kind: 'source',
+    what: 'A mic at the front left of the stage, pointed out at the congregation.',
     flow: 'Picks up the room and the congregation singing. It runs directly to the snake room instead of through a sub snake.',
-    ours: 'Ch 5. Paired with the right room mic on channel 6.',
+    ours: 'Ch 5, at the front left of the stage. Paired with the right room mic on channel 6.',
     wrong: 'Room mics in the main speakers can cause feedback. They usually go to the livestream mix, so it sounds like a room full of people.',
     confirm: ['Rode model (most need phantom power).', 'Whether the room mics feed the stream only.']
   },
   roomR: {
-    label: 'Room mic R', x: 750, y: 445, ch: [6], gear: 'Rode mic', signal: 'mic', kind: 'source',
-    what: 'A mic on the right side of the stage, pointed at the congregation.',
+    label: 'Room mic R', x: 690, y: 385, ch: [6], gear: 'Rode mic', signal: 'mic', kind: 'source',
+    what: 'A mic at the front right of the stage, pointed out at the congregation.',
     flow: 'Picks up the room and the congregation singing. It runs directly to the snake room.',
     ours: 'Ch 6. Paired with the left room mic on channel 5.',
     wrong: 'Left and right levels should match, or the stream sounds lopsided.',
     confirm: ['Rode model.']
   },
   wireless: {
-    label: 'Wireless 1–4', x: 620, y: 540, ch: [8, 9, 10, 11], gear: 'Sennheiser e835 handhelds', signal: 'wireless', kind: 'source',
+    label: 'Wireless 1–4', x: 300, y: 360, ch: [8, 9, 10, 11], gear: 'Sennheiser e835 handhelds', signal: 'wireless', kind: 'source',
     what: 'Four wireless handheld mics for speaking: preaching, announcements, readings.',
     flow: 'The e835 capsule is a dynamic, cardioid mic. A transmitter in the handle sends the signal by radio to a matching receiver in the snake room, which turns it back into an XLR signal.',
-    ours: 'Wireless 1 to 4 on channels 8 to 11. The receivers live in the snake room and plug directly into the main snake.',
+    ours: 'Wireless 1 to 4 on channels 8 to 11, usually spoken into from the stage. The receivers live in the snake room and plug directly into the main snake.',
     wrong: 'Dead batteries are the number one problem: fresh batteries every service. Dropouts happen when a body or wall blocks the radio path.',
     confirm: ['Wireless system model and frequency band.']
   },
@@ -248,37 +248,37 @@ window.STOPS = {
 
   /* ---------- Snake room ---------- */
   receivers: {
-    label: 'Receivers', x: 960, y: 215, ch: [8, 9, 10, 11], gear: 'Wireless receivers', signal: 'mic', kind: 'hub',
+    label: 'Receivers', x: 1050, y: 100, ch: [8, 9, 10, 11], gear: 'Wireless receivers', signal: 'mic', kind: 'hub',
     what: 'The receivers for the four wireless speaking mics.',
     flow: 'Each one picks up its transmitter by radio and puts out an ordinary XLR signal.',
     ours: 'Four receivers in the snake room, plugged directly into the main snake for channels 8 to 11.',
     wrong: 'Check the receiver\'s signal (RF) and audio (AF) meters: no RF means the mic is off or out of range.'
   },
   mainSnake: {
-    label: 'Main snake', x: 870, y: 205, gear: 'Analog multicore', signal: 'mic', kind: 'hub',
+    label: 'Main snake', x: 980, y: 240, gear: 'Analog multicore', signal: 'mic', kind: 'hub',
     what: 'The main analog snake: one thick multicore cable carrying every stage input to the FOH booth.',
     flow: 'Each channel stays a separate balanced mic-level signal all the way to the X32\'s preamps. Nothing is converted to digital until it reaches FOH.',
-    ours: 'It sits under the monitor mixer in the snake room. The three sub snakes plug in here, along with the room mics, drum talkback, SPD, and wireless receivers. Most snake channels match the X32 channel numbers.',
+    ours: 'It sits below the monitor mixer in the snake room. The three sub snakes plug in here, along with the room mics, drum talkback, SPD, and wireless receivers. Most snake channels match the X32 channel numbers.',
     wrong: 'A channel dead on every source points to the snake channel or its connector. The snake carries tiny signals a long way, so keep connectors clean and dry.',
     confirm: ['Total channel count, and whether it has returns back to the stage.']
   },
   monMixer: {
-    label: 'Monitor mixer', x: 930, y: 95, gear: 'Separate monitor console', signal: 'digital', kind: 'hub',
+    label: 'Monitor mixer', x: 980, y: 190, gear: 'Behringer X32', signal: 'digital', kind: 'hub',
     what: 'A second mixer that builds what the musicians and singers hear on stage, separately from what the congregation hears.',
     flow: 'It receives all 32 inputs digitally from the FOH X32 over AES50, after the FOH preamps. Gain is set once, at FOH, so a gain change at FOH also changes every monitor mix.',
-    ours: 'In the snake room, above the snake. It builds a mono bus for each of the five singers, feeds the P16 system, and connects to a router so singers can adjust their own mix from MX-Bus or MX-Q.',
+    ours: 'An X32, at the front of the snake room with the router and P16-D to its left, and the main snake below it. It builds a mono bus for each of the five singers, feeds the P16 system, and connects to a router so singers can adjust their own mix from MX-Bus or MX-Q.',
     wrong: 'All monitors suddenly louder or quieter: someone changed gain at FOH. Monitors silent but FOH fine: check the AES50 cable and the monitor mixer\'s input routing.',
-    confirm: ['Model of the monitor mixer.', 'Which bus feeds each singer.']
+    confirm: ['Which X32 model (full, Compact, Producer or Rack).', 'Which bus feeds each singer.']
   },
   p16d: {
-    label: 'P16-D', x: 1060, y: 150, gear: 'Behringer P16-D', signal: 'digital', kind: 'hub',
+    label: 'P16-D', x: 840, y: 190, gear: 'Behringer P16-D', signal: 'digital', kind: 'hub',
     what: 'A distributor for the P16 personal monitor system.',
     flow: 'It takes the Ultranet stream from the monitor mixer and sends it, with power, to each P16 mixer over ethernet cable. Ultranet carries 16 channels, so the monitor engineer picks which 16 sources the band can mix.',
     ours: 'Feeds the P16s for bass, electric, keys, Malayalam keys and drums. The aux keys P16 is daisy-chained from the keys P16.',
     wrong: 'One P16 dark: swap its cable or port. All dark: check the cable from the monitor mixer.'
   },
   router: {
-    label: 'Router', x: 850, y: 150, gear: 'Network router', signal: 'digital', kind: 'hub',
+    label: 'Router', x: 900, y: 190, gear: 'Network router', signal: 'digital', kind: 'hub',
     what: 'A network router connected to the monitor mixer.',
     flow: 'It carries control data, not audio. Phones and tablets on its Wi-Fi can change the monitor mixer\'s settings.',
     ours: 'Singers join its Wi-Fi and use MX-Bus or MX-Q to adjust their own in-ear mixes.',
@@ -300,86 +300,152 @@ window.STOPS = {
   p16Aux:   { label: 'P16', x: 125, y: 255, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'aux keys', what: 'The aux keys player\'s personal mixer.', ours: 'Daisy-chained from the keys P16, so it depends on that one staying connected.' },
   p16Elec:  { label: 'P16', x: 480, y: 130, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'electric', what: 'The electric guitarist\'s personal mixer.', ours: 'Fed from the P16-D.' },
   p16Bass:  { label: 'P16', x: 720, y: 120, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'bass', what: 'The bassist\'s personal mixer.', ours: 'Fed from the P16-D.' },
-  p16Mal:   { label: 'P16', x: 750, y: 160, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'Malayalam keys', what: 'The Malayalam keys player\'s personal mixer.', ours: 'Fed from the P16-D.' },
+  p16Mal:   { label: 'P16', x: 660, y: 245, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'Malayalam keys', what: 'The Malayalam keys player\'s personal mixer.', ours: 'Fed from the P16-D.' },
   p16Drums: { label: 'P16', x: 845, y: 320, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'drums', what: 'The drummer\'s personal mixer.', ours: 'Fed from the P16-D.' },
 
   /* ---------- FOH ---------- */
   x32: {
-    label: 'FOH X32', x: 440, y: 630, gear: 'Behringer X32', signal: 'mic', kind: 'board', console: true,
+    label: 'FOH X32', x: 210, y: 610, gear: 'Behringer X32', signal: 'mic', kind: 'board', console: true,
     what: 'The front-of-house (FOH) mixer: where the congregation\'s mix is built.',
     flow: 'The analog snake lands on the X32\'s preamps, which add gain and turn each channel into digital audio. From there every channel goes through its processing, out to Waves and back, into buses, and on to the speakers. All inputs are also sent on to the monitor mixer over AES50.',
-    ours: 'Gain and phantom power for all 32 inputs are set here. Open the console view to follow a channel through the X32 itself.',
+    ours: 'On the left side of the FOH booth, back of the room left of center, with the Mac mini to its right and the amps below it. Gain and phantom power for all 32 inputs are set here. Open the console view to follow a channel through the X32 itself.',
     wrong: 'Distortion on loud parts: gain is too high, so lower it at the preamp, not the fader.',
     confirm: ['X32 model and firmware.']
   },
   mac: {
-    label: 'Mac mini', x: 320, y: 630, gear: 'Waves SuperRack Performer', signal: 'digital', kind: 'board',
+    label: 'Mac mini', x: 340, y: 610, gear: 'Waves SuperRack Performer', signal: 'digital', kind: 'board',
     what: 'A Mac mini running Waves SuperRack Performer, which hosts Waves plugins (EQs, compressors, reverbs) on the computer.',
     flow: 'Selected channels leave the X32 digitally, run through plugins on the Mac, and come back into the same channel. This is called an insert. The round trip adds a few milliseconds of delay, set by SuperRack\'s buffer size.',
-    ours: 'Open the console view to see where the insert sits in a channel.',
+    ours: 'To the right of the FOH X32 in the booth. Open the console view to see where the insert sits in a channel.',
     wrong: 'If the Mac sleeps, updates or loses its connection, channels with an active insert go silent. Know how to bypass the insert on the X32.',
     confirm: ['How audio travels between the X32 and the Mac (most likely the X-USB card).', 'Buffer size, and which plugins are on which channels.']
   },
-  outputs: {
-    label: 'Mains, subs, stream', short: 'Mains + stream', x: 190, y: 630, gear: 'Speakers and stream feed', signal: 'line', kind: 'board',
-    what: 'Where the FOH mix leaves the console: the main speakers, the subwoofers, and the livestream.',
-    flow: 'The console sends line-level signals out to amplifiers or powered speakers, which turn them into sound. The stream gets its own mix, because what sounds right in the room rarely sounds right on headphones.',
-    ours: 'To be filled in from the scene file.',
-    wrong: 'Feedback: a mic is too loud for where it is pointed. Pull that channel\'s fader down first, then find the ringing frequency.',
-    confirm: ['Main speakers, subs, amps, and how the stream is fed.']
+  amps: {
+    label: 'Amps', x: 210, y: 660, gear: 'Power amplifiers', signal: 'line', kind: 'board',
+    what: 'The amplifiers for the mains, subs and stage monitors, in the rack below the FOH mixer.',
+    flow: 'The console puts out line level, a signal strong enough to travel down a cable but far too weak to move a speaker. An amp boosts it to speaker level, which carries real power.',
+    ours: 'Below the FOH X32. They feed the left and right mains, both subs, and the two stage wedges.',
+    wrong: 'One speaker silent: check that amp channel\'s power, its clip and protect lights, and its speaker cable. Never unplug a speaker cable while the amp is on and loud.',
+    confirm: ['Amp models, and which amp channel feeds which speaker.']
+  },
+  stream: {
+    label: 'Stream', x: 460, y: 640, gear: 'Matrix output on the FOH X32', signal: 'line', kind: 'board',
+    what: 'The livestream mix, built on a matrix output of the FOH X32.',
+    flow: 'A matrix blends the main mix and buses into a separate mix. The stream needs one because the room is already loud: drums and guitar amps reach the congregation directly, but the stream only hears what the console sends it.',
+    ours: 'A matrix on the FOH X32 feeds the stream.',
+    wrong: 'Stream sounds thin or vocal-heavy: the room mix relies on acoustic sound the stream never hears. Bring up instruments and room mics in the matrix.',
+    confirm: ['Which matrix it is, and what device receives it (stream computer, encoder).']
+  },
+  mainL: {
+    label: 'Main L', x: 150, y: 425, gear: 'Main speaker, hung above the stage', signal: 'line', kind: 'out',
+    what: 'The left main speaker, hung above the front of the stage.',
+    flow: 'Turns the amp\'s speaker-level signal back into sound. Hanging the mains high spreads the sound evenly to the back rows and keeps it off the stage mics.',
+    ours: 'Plays the main left side of the FOH mix. Powered from the amps at FOH.',
+    wrong: 'Feedback: a mic is pointed toward a main or held in front of it.',
+    confirm: ['Speaker model.']
+  },
+  mainR: {
+    label: 'Main R', x: 740, y: 425, gear: 'Main speaker, hung above the stage', signal: 'line', kind: 'out',
+    what: 'The right main speaker, hung above the front of the stage.',
+    flow: 'Turns the amp\'s speaker-level signal back into sound for the right side of the room.',
+    ours: 'Plays the main right side of the FOH mix. Powered from the amps at FOH.',
+    wrong: 'Left and right sounding different: check that both amp channels are set to the same level.',
+    confirm: ['Speaker model.']
+  },
+  subL: {
+    label: 'Sub L', x: 95, y: 450, gear: 'Subwoofer, on the floor', signal: 'line', kind: 'out',
+    what: 'The left subwoofer, on the floor next to the stage.',
+    flow: 'Subs play only the lowest notes, roughly below 100 Hz: kick, bass and the bottom of the keys. That frees the mains to play everything above.',
+    ours: 'Powered from the amps at FOH.',
+    wrong: 'Muddy or boomy room: too much sub, or the vocals are not using their low cut.',
+    confirm: ['Whether the subs get the main mix or their own bus, and the crossover point.']
+  },
+  subR: {
+    label: 'Sub R', x: 740, y: 455, gear: 'Subwoofer, on the floor', signal: 'line', kind: 'out',
+    what: 'The right subwoofer, on the floor next to the stage.',
+    flow: 'Plays only the lowest notes, under the right main.',
+    ours: 'Powered from the amps at FOH.',
+    wrong: 'Sub silent: check its amp channel first.',
+    confirm: ['Speaker model.']
+  },
+  monL: {
+    label: 'Wedge L', x: 140, y: 335, gear: 'Stage monitor', signal: 'line', kind: 'out',
+    what: 'A floor wedge on the left side of the stage, facing the center.',
+    flow: 'A wedge points back at the performers so they can hear themselves. It plays its own monitor mix, not the room mix.',
+    ours: 'On the left side of the stage, facing center. Powered from the monitor amp at FOH.',
+    wrong: 'Wedges are the most common source of feedback. Keep vocal mics pointed away from them, and turn the wedge down before turning anything else up.',
+    confirm: ['Which console and bus builds the wedge mixes.']
+  },
+  monR: {
+    label: 'Wedge R', x: 740, y: 330, gear: 'Stage monitor', signal: 'line', kind: 'out',
+    what: 'A floor wedge on the right side of the stage, facing the center.',
+    flow: 'Plays a monitor mix back toward the performers on the right side.',
+    ours: 'On the right side of the stage, facing center. Powered from the monitor amp at FOH.',
+    wrong: 'Ringing on stage: pull the wedge down first.',
+    confirm: ['Which console and bus builds the wedge mixes.']
   }
 };
 
 /* Connections. Each goes from -> to in the direction the signal flows. */
 window.WIRES = [
-  // instruments into DIs
+  // instruments into DIs (each DI sits just behind its instrument)
   ['keys', 'diKeys', 'inst'], ['aux', 'diAux', 'inst'], ['electric', 'diElec', 'inst'],
   ['bass', 'diBass', 'inst'], ['mal', 'diMal', 'inst'], ['click', 'diClick', 'inst'], ['spd', 'diSpd', 'inst'],
   // into the left sub snake (back of stage, between keys and electric)
   ['diKeys', 'leftSub', 'mic'], ['diElec', 'leftSub', 'mic'],
-  ['diAux', 'leftSub', 'mic', [[300, 265], [300, 100]]],
-  ['red', 'leftSub', 'mic', [[215, 310], [310, 310], [310, 100]]],
-  ['green', 'leftSub', 'mic', [[335, 325], [318, 325], [318, 100]]],
+  ['diAux', 'leftSub', 'mic', [[300, 180], [300, 100]]],
+  ['red', 'leftSub', 'mic', [[310, 300], [310, 100]]],
+  ['green', 'leftSub', 'mic', [[318, 300], [318, 100]]],
   // into the right sub snake (back of stage, between electric and bass)
   ['diBass', 'rightSub', 'mic'], ['diMal', 'rightSub', 'mic'], ['tb', 'rightSub', 'mic'],
-  ['joji', 'rightSub', 'mic', [[450, 330], [557, 330], [557, 100]]],
+  ['joji', 'rightSub', 'mic', [[470, 330], [549, 330], [549, 100]]],
   ['blue', 'rightSub', 'mic'],
-  ['yellow', 'rightSub', 'mic', [[685, 315], [573, 315], [573, 100]]],
+  ['yellow', 'rightSub', 'mic', [[685, 280], [580, 280], [580, 100]]],
   // drum cage
   ['kit', 'drumSub', 'mic'], ['diClick', 'drumSub', 'mic'],
   // runs to the main snake
-  ['leftSub', 'mainSnake', 'mic', [[325, 50], [800, 50], [800, 205]]],
-  ['rightSub', 'mainSnake', 'mic', [[565, 55], [795, 55], [795, 205]]],
-  ['roomL', 'mainSnake', 'mic', [[140, 425], [780, 425], [780, 205]]],
-  ['roomR', 'mainSnake', 'mic', [[750, 425], [780, 425], [780, 205]]],
-  ['drumTB', 'mainSnake', 'mic', [[788, 440], [788, 205]]],
-  ['drumSub', 'mainSnake', 'mic', [[1000, 205]]],
-  ['diSpd', 'mainSnake', 'mic', [[1092, 466], [1092, 255], [880, 255], [880, 205]]],
-  ['wireless', 'receivers', 'wireless'], ['receivers', 'mainSnake', 'mic'],
-  // to FOH, back left of center in the room
-  ['mainSnake', 'x32', 'mic', [[850, 205], [850, 266], [1112, 266], [1112, 620], [460, 620]]],
-  ['x32', 'mac', 'digital', null, true], ['x32', 'outputs', 'line', [[440, 676], [190, 676]]],
+  ['leftSub', 'mainSnake', 'mic', [[325, 50], [800, 50], [800, 240]]],
+  ['rightSub', 'mainSnake', 'mic', [[565, 55], [795, 55], [795, 240]]],
+  ['roomL', 'mainSnake', 'mic', [[200, 398], [780, 398], [780, 240]]],
+  ['roomR', 'mainSnake', 'mic', [[690, 398], [780, 398], [780, 240]]],
+  ['drumTB', 'mainSnake', 'mic', [[788, 440], [788, 240]]],
+  ['drumSub', 'mainSnake', 'mic', [[1030, 385], [1030, 240]]],
+  ['diSpd', 'mainSnake', 'mic', [[1092, 466], [1092, 255], [990, 255], [990, 240]]],
+  ['wireless', 'receivers', 'wireless'], ['receivers', 'mainSnake', 'mic', [[1050, 240]]],
+  // to FOH, back of the room left of center
+  ['mainSnake', 'x32', 'mic', [[1112, 240], [1112, 585], [230, 585], [230, 610]]],
+  ['x32', 'mac', 'digital', null, true],
+  ['x32', 'amps', 'line'], ['x32', 'stream', 'line', [[240, 640]]],
+  // amps to the speakers and wedges
+  ['amps', 'mainL', 'line', [[120, 660], [120, 425]]],
+  ['amps', 'subL', 'line', [[120, 660], [120, 450]]],
+  ['amps', 'monL', 'line', [[120, 660], [120, 335]]],
+  ['amps', 'mainR', 'line', [[255, 660], [255, 565], [760, 565], [760, 425]]],
+  ['amps', 'subR', 'line', [[255, 660], [255, 565], [760, 565], [760, 455]]],
+  ['amps', 'monR', 'line', [[255, 660], [255, 565], [760, 565], [760, 330]]],
   // monitor world
-  ['x32', 'monMixer', 'digital', [[460, 640], [1124, 640], [1124, 95]]],
+  ['x32', 'monMixer', 'digital', [[196, 610], [196, 575], [1124, 575], [1124, 190]]],
   ['router', 'monMixer', 'digital'],
-  ['monMixer', 'p16d', 'digital', [[930, 150]]],
-  ['p16d', 'p16Keys', 'digital', [[1095, 150], [1095, 42], [150, 42]]], ['p16Keys', 'p16Aux', 'digital'],
-  ['p16d', 'p16Elec', 'digital', [[1095, 150], [1095, 42], [480, 42]]], ['p16d', 'p16Bass', 'digital', [[1095, 150], [1095, 42], [720, 42]]],
-  ['p16d', 'p16Mal', 'digital', [[1095, 150], [1095, 42], [750, 42]]],
-  ['p16d', 'p16Drums', 'digital', [[1060, 274], [845, 274]]],
-  ['monMixer', 'xvive', 'monitor', [[870, 95], [870, 30], [58, 30]]],
+  ['monMixer', 'p16d', 'digital', [[970, 150], [840, 150]]],
+  ['p16d', 'p16Keys', 'digital', [[820, 190], [820, 42], [150, 42]]], ['p16Keys', 'p16Aux', 'digital'],
+  ['p16d', 'p16Elec', 'digital', [[820, 190], [820, 42], [480, 42]]],
+  ['p16d', 'p16Bass', 'digital', [[820, 190], [820, 42], [720, 42]]],
+  ['p16d', 'p16Mal', 'digital', [[820, 190], [820, 42], [660, 42]]],
+  ['p16d', 'p16Drums', 'digital'],
+  ['monMixer', 'xvive', 'monitor', [[980, 30], [58, 30]]],
   ['xvive', 'red', 'wireless'], ['xvive', 'green', 'wireless'], ['xvive', 'joji', 'wireless'],
   ['xvive', 'blue', 'wireless'], ['xvive', 'yellow', 'wireless']
 ];
 
 /* Guided tours: an ordered list of stops. */
 window.TOURS = [
-  { id: 'vocal', name: 'A vocal to the room', stops: ['red', 'leftSub', 'mainSnake', 'x32', 'mac', 'outputs'] },
+  { id: 'vocal', name: 'A vocal to the room', stops: ['red', 'leftSub', 'mainSnake', 'x32', 'amps', 'mainL'] },
   { id: 'ears', name: 'A singer\'s in-ear mix', stops: ['green', 'leftSub', 'mainSnake', 'x32', 'monMixer', 'xvive', 'green'] },
-  { id: 'keys', name: 'Keys through a DI', stops: ['keys', 'diKeys', 'leftSub', 'mainSnake', 'x32', 'outputs'] },
+  { id: 'waves', name: 'Out to Waves and back', stops: ['joji', 'rightSub', 'mainSnake', 'x32', 'mac'] },
+  { id: 'keys', name: 'Keys through a DI', stops: ['keys', 'diKeys', 'leftSub', 'mainSnake', 'x32', 'stream'] },
   { id: 'bass', name: 'Bass to the bassist\'s P16', stops: ['bass', 'diBass', 'rightSub', 'mainSnake', 'x32', 'monMixer', 'p16d', 'p16Bass'] },
-  { id: 'drums', name: 'The drum kit', stops: ['kit', 'drumSub', 'mainSnake', 'x32', 'outputs'] },
-  { id: 'speak', name: 'A wireless speaking mic', stops: ['wireless', 'receivers', 'mainSnake', 'x32', 'outputs'] }
+  { id: 'drums', name: 'Kick drum to the subs', stops: ['kit', 'drumSub', 'mainSnake', 'x32', 'amps', 'subL'] },
+  { id: 'speak', name: 'A wireless speaking mic', stops: ['wireless', 'receivers', 'mainSnake', 'x32', 'amps', 'mainR'] }
 ];
 
 /* Inside the FOH X32: the order a channel's signal travels. */
