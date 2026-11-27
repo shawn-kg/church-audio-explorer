@@ -124,10 +124,21 @@ svg.focus .node.lit { opacity: 1; }
 .stage-btn span { color: var(--muted); font-size: 14px; }
 .stage-btn:hover, .stage-btn.on { border-color: var(--mic); background: var(--surface-2); }
 
+.sheet-close { display: none; }
 @media (max-width: 900px) {
   .work { grid-template-columns: minmax(0, 1fr); }
   .map { border-right: 0; border-bottom: 1px solid var(--edge); padding-right: max(4vw, 16px); }
   .panel { position: static; max-height: none; padding-left: max(4vw, 16px); }
+  .top { padding-top: 18px; padding-bottom: 12px; gap: 12px; }
+  .brand h1 { font-size: 30px; margin-bottom: 4px; }
+  .brand p { font-size: 15px; }
+  .tourbar { position: sticky; top: 0; z-index: 5; padding-top: 10px; padding-bottom: 10px; }
+  .tourbar label { display: none; }
+  .tourbar select { flex: 1 1 100%; }
+  .panel.sheet { position: fixed; left: 0; right: 0; bottom: 0; top: auto; max-height: 48vh; overflow-y: auto; z-index: 10; background: var(--surface); border-top: 1px solid var(--edge); border-radius: 18px 18px 0 0; box-shadow: 0 -10px 30px rgba(0, 0, 0, .55); padding: 14px max(4vw, 16px) calc(24px + env(safe-area-inset-bottom, 0px)); }
+  .panel.sheet h2 { font-size: 24px; margin-top: 6px; }
+  .panel.sheet .sheet-close { display: block; position: sticky; top: 0; float: right; width: 40px; height: 40px; margin: -4px -6px 0 8px; border-radius: 50%; border: 1px solid var(--edge); background: var(--surface-2); font-size: 22px; line-height: 1; cursor: pointer; z-index: 1; }
+  body.sheet-open .work { padding-bottom: 50vh; }
 }
 @media (prefers-reduced-motion: reduce) {
   svg.focus .pulse.on { animation: none; opacity: 0; }

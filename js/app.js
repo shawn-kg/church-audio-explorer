@@ -34,6 +34,34 @@
     return n;
   };
   const colorOf = sig => `var(--${sig})`;
+  const narrow = () => window.matchMedia('(max-width: 900px)').matches;
+
+  // On phones the panel slides up as a sheet over the bottom of the map.
+  function openSheet() {
+    if (!narrow()) return;
+    panel.classList.add('sheet');
+    document.body.classList.add('sheet-open');
+    const close = h('button', 'sheet-close', '×');
+    close.setAttribute('aria-label', 'Close');
+    close.addEventListener('click', () => { stopTour(); select(null); });
+    panel.prepend(close);
+    panel.scrollTop = 0;
+  }
+  function closeSheet() {
+    panel.classList.remove('sheet');
+    document.body.classList.remove('sheet-open');
+  }
+  // Keep the selected stop in view on small screens.
+  function reveal(id) {
+    if (!narrow() || !STOPS[id]) return;
+    const sv = document.getElementById('stageView');
+    const r = STOPS[id].g.getBoundingClientRect();
+    const box = sv.getBoundingClientRect();
+    sv.scrollTo({ left: sv.scrollLeft + (r.left + r.width / 2) - (box.left + box.width / 2), behavior: 'smooth' });
+    const bar = document.querySelector('.tourbar').getBoundingClientRect().bottom;
+    const free = window.innerHeight * 0.5;
+    if (r.top < bar + 20 || r.bottom > free) window.scrollBy({ top: r.top - (bar + (free - bar) / 2), behavior: 'smooth' });
+  }
 
   /* ---------- build the wires list ---------- */
   const wires = WIRES.map(([from, to, type, via, both], i) => ({ i, from, to, type, via: via || [], both: !!both }));
@@ -235,9 +263,11 @@
       outs.slice(0, 6).forEach(n => add(n, 'goes to ›'));
       panel.appendChild(wrap);
     }
+    openSheet();
   }
 
   function renderIntro() {
+    closeSheet();
     panel.replaceChildren();
     panel.appendChild(h('h2', null, 'Start anywhere'));
     panel.appendChild(h('p', null, 'Every dot is a piece of gear on our stage, and every line is a cable or a wireless link. The color of a line tells you what kind of signal it carries, and it changes as the signal moves: a keyboard\'s amber line turns cyan at its DI box.'));
@@ -261,6 +291,7 @@
     if (!opts.keepLight) light(chainOf(id), id);
     renderStop(id);
     setHash(id);
+    reveal(id);
   }
 
   /* ---------- tours ---------- */
@@ -296,6 +327,7 @@
     if (step === tour.stops.length - 1 && tour.id === 'ears') {
       panel.insertBefore(h('p', 'confirm', 'Back where it started: the singer now hears their own voice, mixed with the band, through their in-ear pack.'), panel.children[2]);
     }
+    reveal(id);
     prevBtn.disabled = step === 0;
     nextBtn.disabled = step === tour.stops.length - 1;
     countEl.textContent = `${step + 1}/${tour.stops.length}`;
@@ -331,6 +363,8 @@
         section(panel, 'What happens to the signal here', c.flow);
         section(panel, 'Our setup', c.ours);
         section(panel, 'What goes wrong here', c.wrong);
+        if (!b.dataset.auto) openSheet();
+        delete b.dataset.auto;
       });
       li.appendChild(b);
       ul.appendChild(li);
@@ -347,7 +381,7 @@
     document.getElementById('v-console').classList.toggle('on', isConsole);
     document.getElementById('v-stage').setAttribute('aria-pressed', !isConsole);
     document.getElementById('v-console').setAttribute('aria-pressed', isConsole);
-    if (isConsole) { stopTour(); consoleView.querySelector('.stage-btn').click(); }
+    if (isConsole) { stopTour(); const first = consoleView.querySelector('.stage-btn'); first.dataset.auto = '1'; first.click(); }
     else if (!tour) select(current);
   }
   document.getElementById('v-stage').addEventListener('click', () => setView('stage'));
