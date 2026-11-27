@@ -65,6 +65,15 @@ button, select { font: inherit; color: inherit; }
 .confirm { margin-top: 20px; padding: 12px 14px; border: 1px dashed #4a5a72; border-radius: 10px; font-size: 14px; color: var(--muted); }
 .confirm strong { color: var(--ink); font-weight: 600; }
 .confirm ul { margin: 6px 0 0; padding-left: 18px; }
+.goes-wrap { margin: 10px 0 0; padding: 10px 12px; border: 1px solid var(--edge); border-radius: 12px; background: var(--bg); }
+.goes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.panel p.goes-hint { margin: 6px 0 0; font-size: 13px; color: var(--muted); }
+.goes-label { font-size: 13px; color: var(--muted); margin-right: 2px; }
+.dest { font-size: 13px; font-weight: 500; color: var(--ink); border: 1px solid var(--edge); background: var(--surface-2); border-radius: 999px; padding: 3px 11px; line-height: 1.4; }
+button.dest { cursor: pointer; }
+button.dest:hover { border-color: var(--mic); }
+button.dest.on { border-color: var(--mic); background: #13304a; }
+button.dest:focus-visible { outline: 2px solid var(--mic); outline-offset: 2px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .chip { background: var(--surface); border: 1px solid var(--edge); border-radius: 999px; padding: 7px 12px; cursor: pointer; font-size: 14px; min-height: 36px; }
 .chip:hover { border-color: var(--mic); }

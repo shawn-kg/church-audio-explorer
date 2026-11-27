@@ -151,7 +151,7 @@ window.STOPS = {
     wrong: 'Silent: 48V phantom power is off on channel 12. Because it is more sensitive than a 58, it can feed back sooner in a wedge.'
   },
   blue: Object.assign(VOCAL('Blue', 15, 'right sub snake', 'blue'), { x: 565, y: 300 }),
-  yellow: Object.assign(VOCAL('Yellow', 16, 'right sub snake', 'yellow'), { x: 685, y: 300 }),
+  yellow: Object.assign(VOCAL('Yellow', 16, 'right sub snake', 'yellow'), { x: 648, y: 300 }),
   rightSub: {
     label: 'Right sub snake', x: 565, y: 75, gear: '8-channel sub snake', signal: 'mic', kind: 'snake',
     what: 'The second 8-input sub snake, on the right of the stage.',
@@ -166,16 +166,16 @@ window.STOPS = {
     label: 'Room mic L', x: 128, y: 300, ch: [5], gear: 'Rode mic', signal: 'mic', kind: 'source',
     what: 'A mic on the left edge of the stage, in line with the vocalists, pointed out at the congregation.',
     flow: 'Picks up the room and the congregation singing. It runs directly to the snake room instead of through a sub snake.',
-    ours: 'Ch 5. Its cable runs around the outside of the stage to the snake room. Paired with the right room mic on channel 6.',
-    wrong: 'Room mics in the main speakers can cause feedback. They usually go to the livestream mix, so it sounds like a room full of people.',
-    confirm: ['Rode model (most need phantom power).', 'Whether the room mics feed the stream only.']
+    ours: 'Ch 5, sent only to the stream matrix. Its cable runs around the outside of the stage to the snake room. Paired with the right room mic on channel 6.',
+    wrong: 'Room mics are kept out of the main speakers, where they would cause feedback. They feed only the stream matrix, so the livestream sounds like a room full of people.',
+    confirm: ['Rode model (most need phantom power).']
   },
   roomR: {
     label: 'Room mic R', x: 758, y: 300, ch: [6], gear: 'Rode mic', signal: 'mic', kind: 'source',
     what: 'A mic on the right edge of the stage, in line with the vocalists, pointed out at the congregation.',
     flow: 'Picks up the room and the congregation singing. It runs directly to the snake room.',
-    ours: 'Ch 6. Its cable runs off the right edge of the stage to the snake room. Paired with the left room mic on channel 5.',
-    wrong: 'Left and right levels should match, or the stream sounds lopsided.',
+    ours: 'Ch 6, sent only to the stream matrix. Its cable runs off the right edge of the stage to the snake room. Paired with the left room mic on channel 5.',
+    wrong: 'It feeds only the stream matrix, not the main speakers. Left and right levels should match, or the stream sounds lopsided.',
     confirm: ['Rode model.']
   },
   wireless: {
@@ -404,7 +404,7 @@ window.WIRES = [
   ['tbBand', 'rightSub', 'mic', [[260, 150], [260, 58], [555, 58]]],
   ['joji', 'rightSub', 'mic', [[470, 400], [770, 400], [770, 58], [565, 58]]],
   ['blue', 'rightSub', 'mic'],
-  ['yellow', 'rightSub', 'mic', [[685, 280], [580, 280], [580, 75]]],
+  ['yellow', 'rightSub', 'mic', [[648, 280], [580, 280], [580, 75]]],
   // drum cage
   ['kit', 'drumSub', 'mic'], ['diClick', 'drumSub', 'mic'],
   // runs to the main snake
@@ -424,22 +424,59 @@ window.WIRES = [
   ['amps', 'mainL', 'line', [[120, 660], [120, 425]]],
   ['amps', 'subL', 'line', [[120, 660], [120, 450]]],
   ['amps', 'monL', 'line', [[120, 660], [120, 390]]],
-  ['amps', 'mainR', 'line', [[255, 660], [255, 565], [760, 565], [760, 425]]],
-  ['amps', 'subR', 'line', [[255, 660], [255, 565], [795, 565]]],
-  ['amps', 'monR', 'line', [[255, 660], [255, 565], [760, 565], [760, 390]]],
+  ['amps', 'mainR', 'line', [[210, 708], [760, 708], [760, 425]]],
+  ['amps', 'subR', 'line', [[210, 708], [795, 708]]],
+  ['amps', 'monR', 'line', [[210, 708], [760, 708], [760, 390]]],
   // monitor world
-  ['x32', 'monMixer', 'digital', [[196, 610], [196, 575], [1124, 575], [1124, 115]]],
+  ['x32', 'monMixer', 'digital', [[196, 610], [196, 555], [1124, 555], [1124, 115]]],
   ['router', 'monMixer', 'digital'],
   ['monMixer', 'p16d', 'digital', [[975, 92], [835, 92]]],
   ['p16d', 'p16Keys', 'digital', [[820, 115], [820, 36], [150, 36]]], ['p16Keys', 'p16Aux', 'digital'],
   ['p16d', 'p16Elec', 'digital', [[820, 115], [820, 36], [480, 36]]],
   ['p16d', 'p16Bass', 'digital', [[820, 115], [820, 36], [720, 36]]],
   ['p16d', 'p16Mal', 'digital', [[820, 115], [820, 36], [735, 36]]],
-  ['p16d', 'p16Drums', 'digital', [[835, 226], [1095, 226], [1095, 250]]],
+  ['p16d', 'p16Drums', 'digital', [[860, 115], [860, 244], [1080, 244]]],
   ['monMixer', 'xvive', 'monitor', [[990, 30], [58, 30]]],
   ['xvive', 'red', 'wireless'], ['xvive', 'green', 'wireless'], ['xvive', 'joji', 'wireless'],
   ['xvive', 'blue', 'wireless'], ['xvive', 'yellow', 'wireless']
 ];
+
+/*
+  Where each input goes after the FOH X32. Clicking an input lights its
+  path to the FOH X32; the panel lists these destinations under "Goes to",
+  and tapping one draws its cables on the map.
+*/
+window.DESTINATIONS = {
+  main: {
+    label: 'Main PA',
+    note: 'the amps, main speakers and subs',
+    wires: [['x32', 'amps'], ['amps', 'mainL'], ['amps', 'mainR'], ['amps', 'subL'], ['amps', 'subR']]
+  },
+  stream: {
+    label: 'Stream',
+    note: 'the stream matrix',
+    wires: [['x32', 'stream']]
+  },
+  monitor: {
+    label: 'Monitors',
+    note: 'the monitor mixer, every singer\'s in-ears and every P16',
+    wires: [
+      ['x32', 'monMixer'], ['monMixer', 'xvive'],
+      ['xvive', 'red'], ['xvive', 'green'], ['xvive', 'joji'], ['xvive', 'blue'], ['xvive', 'yellow'],
+      ['monMixer', 'p16d'], ['p16d', 'p16Keys'], ['p16Keys', 'p16Aux'], ['p16d', 'p16Elec'],
+      ['p16d', 'p16Bass'], ['p16d', 'p16Mal'], ['p16d', 'p16Drums']
+    ]
+  }
+};
+
+/* Which destinations each input feeds. Inputs not listed feed `default`. */
+window.SENDS = {
+  default: ['main', 'stream', 'monitor'],
+  // Talkbacks and click are for the band only.
+  tbMain: ['monitor'], tbBand: ['monitor'], drumTB: ['monitor'], click: ['monitor'],
+  // Room mics feed only the livestream.
+  roomL: ['stream'], roomR: ['stream']
+};
 
 /* Guided tours: an ordered list of stops. */
 window.TOURS = [
