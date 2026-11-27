@@ -80,6 +80,7 @@ button, select { font: inherit; color: inherit; }
 .area text { fill: var(--muted); font: 600 17px 'Space Grotesk', sans-serif; letter-spacing: .02em; }
 .grid line { stroke: var(--grid); stroke-width: 1; }
 .front { stroke: #2c3e5a; stroke-width: 3; }
+.door { stroke: var(--bg); stroke-width: 5; }
 .note { fill: #5f718a; font: 500 15px Inter, sans-serif; }
 
 .wire { fill: none; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; opacity: .55; transition: opacity .2s; }

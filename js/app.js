@@ -10,13 +10,13 @@
 
   // Label positions that differ from the default (below the dot).
   const LABEL = {
-    diKeys: 'left', diAux: 'left', diElec: 'right', diBass: 'right', diMal: 'above',
-    diClick: 'left', diSpd: 'right', click: 'below', spd: 'right',
-    tbMain: 'left', tbBand: 'left', keys: 'right', aux: 'right', electric: 'left', bass: 'left', mal: 'below', joji: 'right',
-    yellow: 'right', wireless: 'right', roomL: 'above', roomR: 'above',
-    p16Keys: 'left', p16Aux: 'left', p16Elec: 'right', p16Bass: 'right', p16Mal: 'left', p16Drums: 'right',
-    leftSub: 'above', rightSub: 'above', mainSnake: 'below', monMixer: 'below', p16d: 'below', router: 'above',
-    receivers: 'below', drumSub: 'left', drumTB: 'above', kit: 'above',
+    diKeys: 'left', diAux: 'left', diElec: 'right', diBass: 'right', diMal: 'left',
+    diClick: 'left', diSpd: 'right', click: 'right', spd: 'right',
+    tbMain: 'left', tbBand: 'left', keys: 'left', aux: 'right', electric: 'below', bass: 'right', mal: 'right', joji: 'right',
+    yellow: 'left', wireless: 'right', roomL: 'above', roomR: 'above',
+    p16Keys: 'right', p16Aux: 'left', p16Elec: 'right', p16Bass: 'right', p16Mal: 'left', p16Drums: 'right',
+    leftSub: 'below', rightSub: 'below', mainSnake: 'above', monMixer: 'below', p16d: 'below', router: 'below',
+    receivers: 'below', drumSub: 'left', drumTB: 'below', kit: 'below',
     mac: 'below', x32: 'left', amps: 'left', stream: 'below',
     mainL: 'left', subL: 'left', monL: 'left', mainR: 'left', subR: 'left', monR: 'left'
   };
@@ -56,16 +56,17 @@
     for (const a of AREAS) {
       const g = el('g', { class: 'area ' + a.id }, root);
       el('rect', { x: a.x, y: a.y, width: a.w, height: a.h, rx: 10 }, g);
-      const bottom = a.id === 'side' || a.id === 'stage' || a.id === 'foh';
+      if (a.door) el('line', { class: 'door', x1: a.door[0], y1: a.door[1], x2: a.door[2], y2: a.door[3] }, g);
+      const bottom = a.id === 'stage' || a.id === 'foh';
       const right = a.id === 'drums';
-      el('text', { x: right ? a.x + a.w - 12 : a.x + 12, y: bottom ? a.y + a.h - 14 : a.y + 24, 'text-anchor': right ? 'end' : 'start' }, g).textContent = a.label;
+      if (a.id !== 'stage') el('text', { x: right ? a.x + a.w - 12 : a.x + 12, y: bottom ? a.y + a.h - 14 : a.y + 24, 'text-anchor': right ? 'end' : 'start' }, g).textContent = a.label;
     }
     el('line', { class: 'front', x1: 115, y1: 405, x2: 765, y2: 405 }, root);
     el('text', { class: 'note', x: 820, y: 560, 'text-anchor': 'middle' }, root).textContent = 'Congregation';
 
     // drum kit sketch
     const kit = el('g', { class: 'kit' }, root);
-    [[920, 382, 22], [893, 360, 11], [948, 362, 13], [882, 392, 10], [958, 396, 9]].forEach(([cx, cy, r]) =>
+    [[930, 327, 22], [903, 305, 11], [958, 307, 13], [892, 337, 10], [968, 341, 9]].forEach(([cx, cy, r]) =>
       el('circle', { class: 'drum', cx, cy, r }, kit));
 
     const wireLayer = el('g', {}, root);
