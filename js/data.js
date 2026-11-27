@@ -134,16 +134,14 @@ window.STOPS = {
     what: 'A talkback mic in front of the bass, so the band and worship leader can talk to each other and the tech team without the congregation hearing.',
     flow: 'An ordinary mic-level signal. What makes it talkback is the routing: it goes to the monitor mixes, not the mains. The Beta 58A is a supercardioid dynamic mic, with tighter pickup than a 58.',
     ours: 'Ch 1, into the right sub snake. It usually sits in front of the bass but moves around.',
-    wrong: 'Talkback heard in the room or on the stream: the channel is assigned to the main mix. It should only feed monitor buses.',
-    confirm: ['Whether ch 1 is the one in front of the bass, or the one in front of the keys.']
+    wrong: 'Talkback heard in the room or on the stream: the channel is assigned to the main mix. It should only feed monitor buses.'
   },
   tbBand: {
     label: 'Band talkback', short: 'Talkback', x: 205, y: 150, ch: [2], gear: 'Samson mic', signal: 'mic', kind: 'source',
     what: 'A second talkback mic, in front of the main keys.',
     flow: 'A mic-level signal routed to the monitor mixes only.',
     ours: 'Ch 2. It usually sits in front of the keys on the left of the stage but moves around, and its cable runs across to the right sub snake.',
-    wrong: 'Heard in the room: the channel is assigned to the main mix.',
-    confirm: ['Whether ch 2 is the one in front of the keys.']
+    wrong: 'Heard in the room: the channel is assigned to the main mix.'
   },
   joji: {
     label: 'Joji', x: 470, y: 370, ch: [12], gear: 'Shure KSM9', signal: 'mic', kind: 'source',
