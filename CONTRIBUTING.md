@@ -25,7 +25,7 @@ Thanks for helping keep the audio guide accurate. Every change goes through a pu
 - **Fix or add a fact:** edit the `what`, `flow`, `ours` or `wrong` text on a stop in `js/data.js`. When a "Still to confirm" item is answered, remove it from that stop's `confirm` list.
 - **Move a piece of gear:** change its `x` and `y` in `STOPS`. The drawing is 1140 units wide, seen from the congregation, with the back of the stage at the top. If a cable now bends in the wrong place, adjust its bend points in `WIRES`.
 - **Add a cable:** add `['fromId', 'toId', 'signalType']` to `WIRES`, in the direction the signal flows. Signal types are listed in `SIGNALS`.
-- **Change where an input goes:** each input branches at the FOH X32 to the destinations in `DESTINATIONS` (main PA, stream, monitors). Most inputs use `SENDS.default`. To give one input a different set, add it to `SENDS`, for example `click: ['monitor']`.
+- **Change where an input goes:** after the FOH X32, each input feeds the destinations in `DESTINATIONS` (main PA, stream, monitors). They are listed under "After FOH, goes to" in its panel, and tapping one draws that branch on the map. Most inputs use `SENDS.default`. To give one input a different set, add it to `SENDS`, for example `click: ['monitor']`.
 - **Add a tour:** add an entry to `TOURS`. Each pair of neighbouring stops must be joined by a cable, or the check will fail.
 
 ## Check locally (optional)

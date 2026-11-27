@@ -73,7 +73,7 @@
       if (a.id !== 'stage') el('text', { x: right ? a.x + a.w - 12 : a.x + 12, y: bottom ? a.y + a.h - 14 : a.y + 24, 'text-anchor': right ? 'end' : 'start' }, g).textContent = a.label;
     }
     el('line', { class: 'front', x1: 115, y1: 405, x2: 765, y2: 405 }, root);
-    el('text', { class: 'note', x: 820, y: 560, 'text-anchor': 'middle' }, root).textContent = 'Congregation';
+    el('text', { class: 'note', x: 930, y: 520, 'text-anchor': 'middle' }, root).textContent = 'Congregation';
 
     const kit = el('g', { class: 'kit' }, root);
     [[930, 327, 22], [903, 305, 11], [958, 307, 13], [892, 337, 10], [968, 341, 9]].forEach(([cx, cy, r]) =>
@@ -325,15 +325,18 @@
   // What lights up when a stop is clicked: its path to the FOH X32, then every
   // destination its inputs feed (see DESTINATIONS and SENDS in data.js).
   const wireIndex = (f, t) => { const w = wires.find(x => x.from === f && x.to === t); return w ? w.i : -1; };
-  function routeOf(id) {
+  // `open` is the destination (if any) the viewer tapped in the panel; only that one is drawn past the FOH X32.
+  function routeOf(id, open = null) {
     const on = new Set();
     const sources = new Set();
     let reachesHub = false;
-    const addDests = keys => keys.forEach(k => DESTINATIONS[k].wires.forEach(([f, t]) => { const i = wireIndex(f, t); if (i >= 0) on.add(i); }));
+    const addDests = keys => keys.forEach(k => {
+      if (k !== open) return;
+      DESTINATIONS[k].wires.forEach(([f, t]) => { const i = wireIndex(f, t); if (i >= 0) on.add(i); });
+    });
     if (id === HUB) {
       wires.forEach(w => { if (w.from === HUB || w.to === HUB) on.add(w.i); });
       const all = Object.keys(DESTINATIONS);
-      addDests(all);
       return { on, dests: all };
     }
     if (STOPS[id].kind === 'source') sources.add(id);
@@ -417,15 +420,31 @@
     };
   }
 
-  function goesTo(dests) {
-    const p = h('p', 'goes');
-    p.appendChild(h('span', 'goes-label', 'Goes to'));
+  // "Goes to" chips: where the signal goes after the FOH X32. Tapping one draws that branch on the map.
+  let openDest = null;
+  function goesTo(id, dests) {
+    const wrap = h('div', 'goes-wrap');
+    const p = h('div', 'goes');
+    p.appendChild(h('span', 'goes-label', 'After FOH, goes to'));
     dests.forEach(k => {
-      const d = h('span', 'dest', DESTINATIONS[k].label);
-      d.title = DESTINATIONS[k].note;
-      p.appendChild(d);
+      const d = DESTINATIONS[k];
+      const b = h('button', 'dest' + (k === openDest ? ' on' : ''), d.label);
+      b.title = 'Show ' + d.note + ' on the map';
+      b.setAttribute('aria-pressed', String(k === openDest));
+      b.addEventListener('click', () => {
+        openDest = openDest === k ? null : k;
+        const route = routeOf(id, openDest);
+        const lit = light(route.on, id);
+        wrap.replaceWith(goesTo(id, dests));
+        focus(boxOf([...lit], route.on));
+      });
+      p.appendChild(b);
     });
-    return p;
+    wrap.appendChild(p);
+    wrap.appendChild(h('p', 'goes-hint', openDest
+      ? 'Showing ' + DESTINATIONS[openDest].note + '. Tap again to hide it.'
+      : 'Tap one to see that route on the map.'));
+    return wrap;
   }
 
   function renderStop(id, partId, dests) {
@@ -436,7 +455,7 @@
     panel.appendChild(tag(s.signal));
     panel.appendChild(h('h2', null, s.kind === 'p16' ? 'P16, ' + s.for : s.label));
     panel.appendChild(chLine(s.ch, s.gear));
-    if (dests.length) panel.appendChild(goesTo(dests));
+    if (dests.length) panel.appendChild(goesTo(id, dests));
 
     if (s.parts) {
       const chips = h('div', 'chips');
@@ -547,6 +566,7 @@
       if (narrow()) { setSheet('peek'); fitAll(); }
       return;
     }
+    openDest = null;
     const route = routeOf(id);
     const chain = route.on;
     const lit = light(chain, id);

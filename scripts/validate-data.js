@@ -67,8 +67,11 @@ for (const t of TOURS || []) {
 
 for (const [key, d] of Object.entries(DESTINATIONS || {})) {
   if (!d.label) fail(`destination "${key}": missing label`);
-  for (const [f, t] of d.wires || []) {
+  for (const [f, t] of [...(d.wires || []), ...(d.stub || [])]) {
     if (!(WIRES || []).some(([wf, wt]) => wf === f && wt === t)) fail(`destination "${key}": no cable from "${f}" to "${t}"`);
+  }
+  for (const [f, t] of d.stub || []) {
+    if (!(d.wires || []).some(([wf, wt]) => wf === f && wt === t)) fail(`destination "${key}": stub cable ${f} -> ${t} is not in its full list`);
   }
 }
 for (const [id, list] of Object.entries(SENDS || {})) {

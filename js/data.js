@@ -424,11 +424,11 @@ window.WIRES = [
   ['amps', 'mainL', 'line', [[120, 660], [120, 425]]],
   ['amps', 'subL', 'line', [[120, 660], [120, 450]]],
   ['amps', 'monL', 'line', [[120, 660], [120, 390]]],
-  ['amps', 'mainR', 'line', [[255, 660], [255, 565], [760, 565], [760, 425]]],
-  ['amps', 'subR', 'line', [[255, 660], [255, 565], [795, 565]]],
-  ['amps', 'monR', 'line', [[255, 660], [255, 565], [760, 565], [760, 390]]],
+  ['amps', 'mainR', 'line', [[210, 708], [760, 708], [760, 425]]],
+  ['amps', 'subR', 'line', [[210, 708], [795, 708]]],
+  ['amps', 'monR', 'line', [[210, 708], [760, 708], [760, 390]]],
   // monitor world
-  ['x32', 'monMixer', 'digital', [[196, 610], [196, 575], [1124, 575], [1124, 115]]],
+  ['x32', 'monMixer', 'digital', [[196, 610], [196, 555], [1124, 555], [1124, 115]]],
   ['router', 'monMixer', 'digital'],
   ['monMixer', 'p16d', 'digital', [[975, 92], [835, 92]]],
   ['p16d', 'p16Keys', 'digital', [[820, 115], [820, 36], [150, 36]]], ['p16Keys', 'p16Aux', 'digital'],
@@ -442,13 +442,14 @@ window.WIRES = [
 ];
 
 /*
-  Where each input goes after the FOH X32. Every input branches to the
-  destinations listed for it; the map lights all of them when you click it.
+  Where each input goes after the FOH X32. Clicking an input lights its
+  path to the FOH X32; the panel lists these destinations under "Goes to",
+  and tapping one draws its cables on the map.
 */
 window.DESTINATIONS = {
   main: {
     label: 'Main PA',
-    note: 'mains and subs',
+    note: 'the amps, main speakers and subs',
     wires: [['x32', 'amps'], ['amps', 'mainL'], ['amps', 'mainR'], ['amps', 'subL'], ['amps', 'subR']]
   },
   stream: {
@@ -458,7 +459,7 @@ window.DESTINATIONS = {
   },
   monitor: {
     label: 'Monitors',
-    note: 'the monitor mixer, for every singer\'s in-ears and every P16',
+    note: 'the monitor mixer, every singer\'s in-ears and every P16',
     wires: [
       ['x32', 'monMixer'], ['monMixer', 'xvive'],
       ['xvive', 'red'], ['xvive', 'green'], ['xvive', 'joji'], ['xvive', 'blue'], ['xvive', 'yellow'],
