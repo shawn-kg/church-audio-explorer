@@ -129,17 +129,21 @@ window.STOPS = {
     wrong: 'Hum: ground lift. One side silent: swap the two cables to find out whether the keyboard or the DI is the problem.',
     confirm: ['Exact Radial model.']
   },
-  tb: {
-    label: 'Talkbacks', x: 615, y: 205, ch: [1, 2], gear: 'Two talkback mics', signal: 'mic', kind: 'source',
-    what: 'Mics the band and the worship leader use to talk to each other and to the tech team without the congregation hearing.',
-    flow: 'Ordinary mic-level signals. What makes them talkback is the routing: they go to the monitor mixes and not to the mains.',
-    ours: 'Main talkback (ch 1, Shure Beta 58A) and band talkback (ch 2, Samson). They sit in front of the bass or the Malayalam keys, but move around. Both plug into the right sub snake.',
+  tbMain: {
+    label: 'Main talkback', short: 'Talkback', x: 690, y: 150, ch: [1], gear: 'Shure Beta 58A', signal: 'mic', kind: 'source',
+    what: 'A talkback mic in front of the bass, so the band and worship leader can talk to each other and the tech team without the congregation hearing.',
+    flow: 'An ordinary mic-level signal. What makes it talkback is the routing: it goes to the monitor mixes, not the mains. The Beta 58A is a supercardioid dynamic mic, with tighter pickup than a 58.',
+    ours: 'Ch 1, into the right sub snake. It usually sits in front of the bass but moves around.',
     wrong: 'Talkback heard in the room or on the stream: the channel is assigned to the main mix. It should only feed monitor buses.',
-    confirm: ['Whether the talkbacks are assigned to the main mix at all.'],
-    parts: [
-      { id: 'tb1', label: 'Main talkback', ch: [1], gear: 'Shure Beta 58A', text: 'A supercardioid dynamic mic: tighter pickup than a 58, so it hears less of the stage around it.' },
-      { id: 'tb2', label: 'Band talkback', ch: [2], gear: 'Samson mic', text: 'The band\'s talkback, on the right sub snake.' }
-    ]
+    confirm: ['Whether ch 1 is the one in front of the bass, or the one in front of the keys.']
+  },
+  tbBand: {
+    label: 'Band talkback', short: 'Talkback', x: 720, y: 260, ch: [2], gear: 'Samson mic', signal: 'mic', kind: 'source',
+    what: 'A second talkback mic, in front of the Malayalam keys.',
+    flow: 'A mic-level signal routed to the monitor mixes only.',
+    ours: 'Ch 2, into the right sub snake. It usually sits in front of the Malayalam keys but moves around.',
+    wrong: 'Heard in the room: the channel is assigned to the main mix.',
+    confirm: ['Whether ch 2 is the one in front of the keys.']
   },
   joji: {
     label: 'Joji', x: 470, y: 370, ch: [12], gear: 'Shure KSM9', signal: 'mic', kind: 'source',
@@ -187,7 +191,7 @@ window.STOPS = {
 
   /* ---------- Drum cage ---------- */
   kit: {
-    label: 'Drum kit', x: 940, y: 375, ch: [24, 25, 26, 27, 28, 29, 30], gear: 'Seven mics', signal: 'mic', kind: 'source',
+    label: 'Drum kit', x: 920, y: 375, ch: [24, 25, 26, 27, 28, 29, 30], gear: 'Seven mics', signal: 'mic', kind: 'source',
     what: 'The drum kit, inside the drum cage to the right of the stage. The cage keeps loud drums from bleeding into every other mic.',
     flow: 'Seven mics, each close to one drum, plus two overheads for the cymbals and the whole kit. All go into the drum sub snake.',
     ours: 'Kick (24), snare top (25), snare bottom (26), hi tom (27), low tom (28), overheads L and R (29, 30). The drummer mixes their own monitor on a P16.',
@@ -203,7 +207,7 @@ window.STOPS = {
     ]
   },
   click: {
-    label: 'Click', x: 1075, y: 320, ch: [4], gear: 'Playback device', signal: 'inst', kind: 'source',
+    label: 'Click', x: 1070, y: 440, ch: [4], gear: 'Playback device', signal: 'inst', kind: 'source',
     what: 'The click track: a metronome, and often spoken cues, that keeps the band in time.',
     flow: 'It comes out of a 1/8" headphone jack and is split into two 1/4" plugs. One goes into a Behringer DI.',
     ours: 'Ch 4, through the drum sub snake. It goes to the band\'s monitors only.',
@@ -211,38 +215,38 @@ window.STOPS = {
     confirm: ['What plays the click (phone, laptop, sample pad).']
   },
   diClick: {
-    label: 'DI', x: 1075, y: 355, ch: [4], gear: 'Behringer DI', signal: 'mic', kind: 'di',
+    label: 'DI', x: 1070, y: 395, ch: [4], gear: 'Behringer DI', signal: 'mic', kind: 'di',
     what: 'A DI box for the click.',
     flow: 'Converts the click\'s unbalanced signal into balanced mic level.',
-    ours: 'Feeds channel 4 on the drum sub snake.',
+    ours: 'Sits just behind the click, and feeds channel 4 on the drum sub snake, which sits behind it.',
     wrong: 'Hum in the band\'s ears: try the ground lift.'
   },
   spd: {
-    label: 'SPD', x: 1075, y: 442, ch: [7], gear: 'Sample pad', signal: 'inst', kind: 'source',
+    label: 'SPD', x: 850, y: 450, ch: [7], gear: 'Sample pad', signal: 'inst', kind: 'source',
     what: 'An electronic sample pad the drummer plays for extra sounds.',
     flow: 'A 1/4" output into a Behringer DI. From the DI it skips the drum sub snake and runs straight to the main snake.',
     ours: 'Ch 7.',
     wrong: 'Very loud hits: the pad\'s output level is set too high, so turn it down at the pad, not just at the console.'
   },
   diSpd: {
-    label: 'DI', x: 1075, y: 466, ch: [7], gear: 'Behringer DI', signal: 'mic', kind: 'di',
+    label: 'DI', x: 850, y: 410, ch: [7], gear: 'Behringer DI', signal: 'mic', kind: 'di',
     what: 'A DI box for the SPD.',
     flow: 'Converts its unbalanced output into balanced mic level.',
     ours: 'Runs directly to the main snake in the snake room, channel 7.',
     wrong: 'Hum: ground lift.'
   },
   drumTB: {
-    label: 'Drum talkback', x: 840, y: 440, ch: [3], gear: 'Samson mic', signal: 'mic', kind: 'source',
+    label: 'Drum talkback', x: 990, y: 440, ch: [3], gear: 'Samson mic', signal: 'mic', kind: 'source',
     what: 'The drummer\'s talkback mic.',
     flow: 'A mic-level signal that runs directly to the main snake.',
-    ours: 'Ch 3. Goes to monitors, not the mains.',
+    ours: 'Ch 3, next to the click in the drum cage. It runs directly to the main snake and goes to monitors, not the mains.',
     wrong: 'Heard in the room: it is assigned to the main mix.'
   },
   drumSub: {
-    label: 'Drum snake', x: 1000, y: 385, gear: '8-channel sub snake', signal: 'mic', kind: 'snake',
+    label: 'Drum snake', x: 1070, y: 340, gear: '8-channel sub snake', signal: 'mic', kind: 'snake',
     what: 'The drum cage\'s own sub snake.',
     flow: 'Bundles the kit mics and click into one multicore to the snake room.',
-    ours: 'It sits to the right of the kit. It carries the click (4), kick (24), snare top and bottom (25, 26), hi and low tom (27, 28), and overheads (29, 30).',
+    ours: 'It sits to the right of the kit, behind the click DI. It carries the click (4), kick (24), snare top and bottom (25, 26), hi and low tom (27, 28), and overheads (29, 30).',
     wrong: 'Overheads silent: phantom power is off on channels 29 and 30.'
   },
 
@@ -300,7 +304,7 @@ window.STOPS = {
   p16Aux:   { label: 'P16', x: 125, y: 255, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'aux keys', what: 'The aux keys player\'s personal mixer.', ours: 'Daisy-chained from the keys P16, so it depends on that one staying connected.' },
   p16Elec:  { label: 'P16', x: 480, y: 130, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'electric', what: 'The electric guitarist\'s personal mixer.', ours: 'Fed from the P16-D.' },
   p16Bass:  { label: 'P16', x: 720, y: 120, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'bass', what: 'The bassist\'s personal mixer.', ours: 'Fed from the P16-D.' },
-  p16Mal:   { label: 'P16', x: 660, y: 245, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'Malayalam keys', what: 'The Malayalam keys player\'s personal mixer.', ours: 'Fed from the P16-D.' },
+  p16Mal:   { label: 'P16', x: 630, y: 215, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'Malayalam keys', what: 'The Malayalam keys player\'s personal mixer.', ours: 'Fed from the P16-D.' },
   p16Drums: { label: 'P16', x: 845, y: 320, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'drums', what: 'The drummer\'s personal mixer.', ours: 'Fed from the P16-D.' },
 
   /* ---------- FOH ---------- */
@@ -329,7 +333,7 @@ window.STOPS = {
     confirm: ['Amp models, and which amp channel feeds which speaker.']
   },
   stream: {
-    label: 'Stream', x: 460, y: 640, gear: 'Matrix output on the FOH X32', signal: 'line', kind: 'board',
+    label: 'Stream', x: 470, y: 650, gear: 'Matrix output on the FOH X32', signal: 'line', kind: 'board',
     what: 'The livestream mix, built on a matrix output of the FOH X32.',
     flow: 'A matrix blends the main mix and buses into a separate mix. The stream needs one because the room is already loud: drums and guitar amps reach the congregation directly, but the stream only hears what the console sends it.',
     ours: 'A matrix on the FOH X32 feeds the stream.',
@@ -397,7 +401,8 @@ window.WIRES = [
   ['red', 'leftSub', 'mic', [[310, 300], [310, 100]]],
   ['green', 'leftSub', 'mic', [[318, 300], [318, 100]]],
   // into the right sub snake (back of stage, between electric and bass)
-  ['diBass', 'rightSub', 'mic'], ['diMal', 'rightSub', 'mic'], ['tb', 'rightSub', 'mic'],
+  ['diBass', 'rightSub', 'mic'], ['diMal', 'rightSub', 'mic'], ['tbMain', 'rightSub', 'mic'],
+  ['tbBand', 'rightSub', 'mic'],
   ['joji', 'rightSub', 'mic', [[470, 330], [549, 330], [549, 100]]],
   ['blue', 'rightSub', 'mic'],
   ['yellow', 'rightSub', 'mic', [[685, 280], [580, 280], [580, 100]]],
@@ -408,14 +413,14 @@ window.WIRES = [
   ['rightSub', 'mainSnake', 'mic', [[565, 55], [795, 55], [795, 240]]],
   ['roomL', 'mainSnake', 'mic', [[200, 398], [780, 398], [780, 240]]],
   ['roomR', 'mainSnake', 'mic', [[690, 398], [780, 398], [780, 240]]],
-  ['drumTB', 'mainSnake', 'mic', [[788, 440], [788, 240]]],
-  ['drumSub', 'mainSnake', 'mic', [[1030, 385], [1030, 240]]],
-  ['diSpd', 'mainSnake', 'mic', [[1092, 466], [1092, 255], [990, 255], [990, 240]]],
+  ['drumTB', 'mainSnake', 'mic', [[990, 470], [788, 470], [788, 240]]],
+  ['drumSub', 'mainSnake', 'mic', [[1070, 240]]],
+  ['diSpd', 'mainSnake', 'mic', [[830, 410], [830, 240]]],
   ['wireless', 'receivers', 'wireless'], ['receivers', 'mainSnake', 'mic', [[1050, 240]]],
   // to FOH, back of the room left of center
   ['mainSnake', 'x32', 'mic', [[1112, 240], [1112, 585], [230, 585], [230, 610]]],
   ['x32', 'mac', 'digital', null, true],
-  ['x32', 'amps', 'line'], ['x32', 'stream', 'line', [[240, 640]]],
+  ['x32', 'amps', 'line'], ['x32', 'stream', 'line', [[240, 650]]],
   // amps to the speakers and wedges
   ['amps', 'mainL', 'line', [[120, 660], [120, 425]]],
   ['amps', 'subL', 'line', [[120, 660], [120, 450]]],

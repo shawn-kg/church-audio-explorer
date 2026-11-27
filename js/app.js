@@ -11,13 +11,13 @@
   // Label positions that differ from the default (below the dot).
   const LABEL = {
     diKeys: 'left', diAux: 'left', diElec: 'right', diBass: 'right', diMal: 'above',
-    diClick: 'left', diSpd: 'left', click: 'left', spd: 'left',
-    tb: 'above', keys: 'right', aux: 'right', electric: 'left', bass: 'left', mal: 'below', joji: 'right',
+    diClick: 'left', diSpd: 'right', click: 'below', spd: 'right',
+    tbMain: 'left', tbBand: 'left', keys: 'right', aux: 'right', electric: 'left', bass: 'left', mal: 'below', joji: 'right',
     yellow: 'right', wireless: 'right', roomL: 'above', roomR: 'above',
     p16Keys: 'left', p16Aux: 'left', p16Elec: 'right', p16Bass: 'right', p16Mal: 'left', p16Drums: 'right',
     leftSub: 'above', rightSub: 'above', mainSnake: 'below', monMixer: 'below', p16d: 'below', router: 'above',
-    receivers: 'below', drumSub: 'below', drumTB: 'right', kit: 'above',
-    mac: 'right', x32: 'left', amps: 'below', stream: 'above',
+    receivers: 'below', drumSub: 'left', drumTB: 'above', kit: 'above',
+    mac: 'below', x32: 'left', amps: 'left', stream: 'below',
     mainL: 'left', subL: 'left', monL: 'left', mainR: 'left', subR: 'left', monR: 'left'
   };
 
@@ -56,8 +56,8 @@
     for (const a of AREAS) {
       const g = el('g', { class: 'area ' + a.id }, root);
       el('rect', { x: a.x, y: a.y, width: a.w, height: a.h, rx: 10 }, g);
-      const bottom = a.id === 'side' || a.id === 'stage' || a.id === 'drums' || a.id === 'foh';
-      const right = a.id === 'foh';
+      const bottom = a.id === 'side' || a.id === 'stage' || a.id === 'foh';
+      const right = a.id === 'drums';
       el('text', { x: right ? a.x + a.w - 12 : a.x + 12, y: bottom ? a.y + a.h - 14 : a.y + 24, 'text-anchor': right ? 'end' : 'start' }, g).textContent = a.label;
     }
     el('line', { class: 'front', x1: 115, y1: 405, x2: 765, y2: 405 }, root);
@@ -65,7 +65,7 @@
 
     // drum kit sketch
     const kit = el('g', { class: 'kit' }, root);
-    [[940, 382, 22], [913, 360, 11], [968, 362, 13], [902, 392, 10], [978, 396, 9]].forEach(([cx, cy, r]) =>
+    [[920, 382, 22], [893, 360, 11], [948, 362, 13], [882, 392, 10], [958, 396, 9]].forEach(([cx, cy, r]) =>
       el('circle', { class: 'drum', cx, cy, r }, kit));
 
     const wireLayer = el('g', {}, root);
