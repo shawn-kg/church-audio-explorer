@@ -435,7 +435,7 @@ window.WIRES = [
   ['p16d', 'p16Elec', 'digital', [[820, 115], [820, 36], [480, 36]]],
   ['p16d', 'p16Bass', 'digital', [[820, 115], [820, 36], [720, 36]]],
   ['p16d', 'p16Mal', 'digital', [[820, 115], [820, 36], [735, 36]]],
-  ['p16d', 'p16Drums', 'digital', [[835, 226], [1095, 226], [1095, 250]]],
+  ['p16d', 'p16Drums', 'digital', [[860, 115], [860, 244], [1080, 244]]],
   ['monMixer', 'xvive', 'monitor', [[990, 30], [58, 30]]],
   ['xvive', 'red', 'wireless'], ['xvive', 'green', 'wireless'], ['xvive', 'joji', 'wireless'],
   ['xvive', 'blue', 'wireless'], ['xvive', 'yellow', 'wireless']

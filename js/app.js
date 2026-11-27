@@ -21,7 +21,7 @@
     yellow: 'left', wireless: 'right', roomL: 'above', roomR: 'right',
     p16Keys: 'right', p16Aux: 'below', p16Elec: 'right', p16Bass: 'right', p16Mal: 'left', p16Drums: 'left',
     leftSub: 'below', rightSub: 'below', mainSnake: 'above', monMixer: 'below', p16d: 'below', router: 'below',
-    receivers: 'left', drumSub: 'left', drumTB: 'left', kit: 'below',
+    receivers: 'below', drumSub: 'left', drumTB: 'left', kit: 'below',
     mac: 'below', x32: 'left', amps: 'left', stream: 'below',
     mainL: 'left', subL: 'left', monL: 'left', mainR: 'left', subR: 'right', monR: 'left'
   };
@@ -52,7 +52,8 @@
   let dragged = false; // true while a pan or pinch is happening, so it doesn't count as a tap
   function draw() {
     const defs = el('defs', {}, svg);
-    const f = el('filter', { id: 'glow', x: '-20%', y: '-20%', width: '140%', height: '140%' }, defs);
+    // Glow area in map units: a percentage area collapses to nothing on perfectly straight cables.
+    const f = el('filter', { id: 'glow', filterUnits: 'userSpaceOnUse', x: -60, y: -90, width: MAP.w + 120, height: MAP.h + 180 }, defs);
     el('feGaussianBlur', { stdDeviation: '3', result: 'b' }, f);
     const m = el('feMerge', {}, f);
     el('feMergeNode', { in: 'b' }, m);
