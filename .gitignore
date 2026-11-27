@@ -1,0 +1,14 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Node (in case tooling is added later)
+node_modules/
+npm-debug.log*
+
+# Local test output
+test-results/
+playwright-report/
