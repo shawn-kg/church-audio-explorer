@@ -1,0 +1,12 @@
+{
+  "name": "church-audio-explorer",
+  "private": true,
+  "description": "Interactive map of our stage that follows every audio signal from the mic to the mixer.",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "node --check js/app.js && node --check js/data.js && node scripts/validate-data.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -234,10 +234,10 @@ window.STOPS = {
     wrong: 'Hum: ground lift.'
   },
   drumTB: {
-    label: 'Drum talkback', x: 960, y: 265, ch: [3], gear: 'Samson mic', signal: 'mic', kind: 'source',
+    label: 'Drum talkback', x: 1010, y: 262, ch: [3], gear: 'Samson mic', signal: 'mic', kind: 'source',
     what: 'The drummer\'s talkback mic.',
     flow: 'A mic-level signal that runs directly to the main snake.',
-    ours: 'Ch 3, at the back of the drum cage next to the drummer. It runs directly to the main snake and goes to monitors, not the mains.',
+    ours: 'Ch 3, at the back of the drum cage next to the drummer, near the drum P16. It runs directly to the main snake and goes to monitors, not the mains.',
     wrong: 'Heard in the room: it is assigned to the main mix.'
   },
   drumSub: {
@@ -250,10 +250,10 @@ window.STOPS = {
 
   /* ---------- Snake room ---------- */
   receivers: {
-    label: 'Receivers', x: 1050, y: 80, ch: [8, 9, 10, 11], gear: 'Wireless receivers', signal: 'mic', kind: 'hub',
+    label: 'Receivers', x: 912, y: 182, ch: [8, 9, 10, 11], gear: 'Wireless receivers', signal: 'mic', kind: 'hub',
     what: 'The receivers for the four wireless speaking mics.',
     flow: 'Each one picks up its transmitter by radio and puts out an ordinary XLR signal.',
-    ours: 'Four receivers in the snake room, plugged directly into the main snake for channels 8 to 11.',
+    ours: 'Four receivers in the snake room, just to the left of the main snake, plugged directly into it for channels 8 to 11.',
     wrong: 'Check the receiver\'s signal (RF) and audio (AF) meters: no RF means the mic is off or out of range.'
   },
   mainSnake: {
@@ -303,7 +303,7 @@ window.STOPS = {
   p16Elec:  { label: 'P16', x: 480, y: 130, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'electric', what: 'The electric guitarist\'s personal mixer.', ours: 'Fed from the P16-D.' },
   p16Bass:  { label: 'P16', x: 720, y: 120, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'bass', what: 'The bassist\'s personal mixer.', ours: 'Fed from the P16-D.' },
   p16Mal:   { label: 'P16', x: 735, y: 290, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'Malayalam keys', what: 'The Malayalam keys player\'s personal mixer.', ours: 'Behind and to the right of the Malayalam keys. Fed from the P16-D.' },
-  p16Drums: { label: 'P16', x: 840, y: 305, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'drums', what: 'The drummer\'s personal mixer.', ours: 'On the left side of the drum cage. Fed from the P16-D.' },
+  p16Drums: { label: 'P16', x: 1080, y: 250, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'drums', what: 'The drummer\'s personal mixer.', ours: 'On the right side of the drum cage. Fed from the P16-D.' },
 
   /* ---------- FOH ---------- */
   x32: {
@@ -412,10 +412,10 @@ window.WIRES = [
   ['rightSub', 'mainSnake', 'mic', [[565, 55], [795, 55], [795, 195]]],
   ['roomL', 'mainSnake', 'mic', [[120, 300], [120, 42], [805, 42], [805, 195]]],
   ['roomR', 'mainSnake', 'mic', [[780, 300], [780, 195]]],
-  ['drumTB', 'mainSnake', 'mic', [[960, 195]]],
+  ['drumTB', 'mainSnake', 'mic', [[1010, 195]]],
   ['drumSub', 'mainSnake', 'mic', [[1070, 195]]],
   ['diSpd', 'mainSnake', 'mic', [[825, 350], [825, 195]]],
-  ['wireless', 'receivers', 'wireless'], ['receivers', 'mainSnake', 'mic', [[1050, 195]]],
+  ['wireless', 'receivers', 'wireless'], ['receivers', 'mainSnake', 'mic'],
   // to FOH, back of the room left of center
   ['mainSnake', 'x32', 'mic', [[980, 222], [1112, 222], [1112, 585], [230, 585], [230, 610]]],
   ['x32', 'mac', 'digital', null, true],
@@ -435,7 +435,7 @@ window.WIRES = [
   ['p16d', 'p16Elec', 'digital', [[820, 115], [820, 36], [480, 36]]],
   ['p16d', 'p16Bass', 'digital', [[820, 115], [820, 36], [720, 36]]],
   ['p16d', 'p16Mal', 'digital', [[820, 115], [820, 36], [735, 36]]],
-  ['p16d', 'p16Drums', 'digital'],
+  ['p16d', 'p16Drums', 'digital', [[835, 226], [1095, 226], [1095, 250]]],
   ['monMixer', 'xvive', 'monitor', [[990, 30], [58, 30]]],
   ['xvive', 'red', 'wireless'], ['xvive', 'green', 'wireless'], ['xvive', 'joji', 'wireless'],
   ['xvive', 'blue', 'wireless'], ['xvive', 'yellow', 'wireless']
