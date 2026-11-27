@@ -1,0 +1,397 @@
+/*
+  All site content lives here. To fix a fact, edit the text in this file.
+  Coordinates are in the stage drawing's units (1140 wide), drawn as seen
+  from the congregation: stage left on the left, the snake room back right.
+
+  Each stop has:
+    label   short name drawn on the stage
+    ch      channel numbers on the FOH X32 (if any)
+    gear    the model of gear at this stop
+    signal  signal type key (see SIGNALS)
+    what    what it is
+    flow    what happens to the signal here
+    ours    how we use it
+    wrong   what commonly goes wrong
+    confirm facts still to check with the team
+*/
+
+window.SIGNALS = {
+  inst:     { name: 'Instrument level', note: 'Unbalanced 1/4" (TS)' },
+  mic:      { name: 'Mic level, balanced', note: 'XLR and the analog snake' },
+  digital:  { name: 'Digital audio', note: 'AES50, Ultranet, USB' },
+  line:     { name: 'Line level', note: 'Console outputs to speakers' },
+  monitor:  { name: 'Monitor mix', note: 'Buses to the in-ear transmitters' },
+  wireless: { name: 'Wireless', note: 'Radio, no cable' }
+};
+
+window.AREAS = [
+  { id: 'side',  label: 'Side space',          x: 10,  y: 60,  w: 95,  h: 345 },
+  { id: 'stage', label: 'Stage',               x: 115, y: 60,  w: 650, h: 345 },
+  { id: 'snake', label: 'Snake room',          x: 810, y: 50,  w: 290, h: 210 },
+  { id: 'drums', label: 'Drum cage',           x: 810, y: 280, w: 290, h: 200 },
+  { id: 'foh',   label: 'FOH booth',           x: 150, y: 580, w: 360, h: 90 }
+];
+
+const VOCAL = (name, ch, sub, who) => ({
+  label: name, ch: [ch], gear: 'Shure SM58', signal: 'mic', kind: 'source',
+  what: 'A dynamic, cardioid handheld mic. It turns the singer\'s voice into a small electrical signal and mostly ignores sound arriving from behind it.',
+  flow: 'The mic puts out mic level, a few thousandths of a volt, balanced on an XLR cable. That is far too quiet to use directly, so the preamp at the FOH X32 adds most of the gain. Dynamic mics need no phantom power.',
+  ours: `Ch ${ch}, the ${who} vocal position. It plugs into the ${sub}. The singer hears their mix through an Xvive in-ear pack, controlled from MX-Bus or MX-Q on their phone.`,
+  wrong: 'Cupping the grille makes a 58 boomy and much more likely to feed back. If the channel is silent, swap in a known-good cable, then try another sub snake input to find which part failed.'
+});
+
+window.STOPS = {
+  /* ---------- Left of stage ---------- */
+  keys: {
+    label: 'Keys', x: 205, y: 100, ch: [17, 18], gear: 'Stereo keyboard rig', signal: 'inst', kind: 'source',
+    what: 'The main keyboard, at the back left of the stage, facing forward.',
+    flow: 'Its left and right outputs are unbalanced 1/4" cables at instrument or line level. Unbalanced cables pick up hum over long runs, so they only travel a few feet to the DI.',
+    ours: 'Keys L and R go into the left and right sides of a stereo Radial DI, then to channels 17 and 18 through the left sub snake. The keys player mixes their own monitor on a P16.',
+    wrong: 'Only the left side sounds: the keyboard may be set to mono output, or one cable is unplugged. Hum: try the ground lift switch on the DI.'
+  },
+  diKeys: {
+    label: 'DI', x: 255, y: 150, ch: [17, 18], gear: 'Radial stereo DI', signal: 'mic', kind: 'di',
+    what: 'A direct injection (DI) box. It converts an unbalanced instrument signal into a balanced, mic-level signal.',
+    flow: 'This is where the line on the stage changes color. Amber instrument-level signal goes in on 1/4"; cyan balanced mic-level signal comes out on XLR, ready for a long cable run without picking up noise.',
+    ours: 'One stereo Radial DI takes both keys outputs and sends two XLRs to the left sub snake.',
+    wrong: 'Hum or buzz: press the ground lift. A distorted, crunchy keys sound: the signal is too hot, so engage the pad if the DI has one.',
+    confirm: ['Exact Radial model, and whether it is passive or active.']
+  },
+  aux: {
+    label: 'Aux keys', x: 160, y: 215, ch: [21, 22], gear: 'Stereo keyboard rig', signal: 'inst', kind: 'source',
+    what: 'A second keyboard, in front of and to the left of the main keys, facing the middle of the stage.',
+    flow: 'Stereo unbalanced 1/4" outputs, the same as the main keys, into a DI a few feet away.',
+    ours: 'Aux keys L and R go into a Radial DI, then to channels 21 and 22 through the left sub snake. The aux keys P16 is daisy-chained off the keys P16.',
+    wrong: 'If the aux keys P16 goes silent, check the keys P16 first: the aux one gets its signal through it.'
+  },
+  diAux: {
+    label: 'DI', x: 190, y: 265, ch: [21, 22], gear: 'Radial DI', signal: 'mic', kind: 'di',
+    what: 'A DI box for the aux keys.',
+    flow: 'Converts the two unbalanced keyboard outputs into two balanced, mic-level XLR signals.',
+    ours: 'Left and right sides feed channels 21 and 22 on the left sub snake.',
+    wrong: 'Hum: try the ground lift. No signal: check that both 1/4" cables are fully seated.',
+    confirm: ['Exact Radial model.']
+  },
+  electric: {
+    label: 'Electric', x: 440, y: 95, ch: [19, 20], gear: 'Stereo guitar rig', signal: 'inst', kind: 'source',
+    what: 'The electric guitar rig at the center back of the stage, facing forward.',
+    flow: 'The rig\'s stereo outputs leave on unbalanced 1/4" cables and go straight into DIs, so there is no mic on an amp.',
+    ours: 'Electric L and R each go into a Behringer mono DI, then to channels 19 and 20 through the left sub snake. The guitarist mixes their own monitor on a P16.',
+    wrong: 'One side missing: check both DIs and both cables. A thin or harsh tone in the room is usually the rig\'s output settings, not the console.',
+    confirm: ['What the rig is (amp modeler, pedalboard), and whether it outputs at instrument or line level.']
+  },
+  diElec: {
+    label: 'DIs', x: 440, y: 150, ch: [19, 20], gear: 'Two Behringer mono DIs', signal: 'mic', kind: 'di',
+    what: 'Two mono DI boxes, one for each side of the guitar rig.',
+    flow: 'Each converts one unbalanced output into one balanced, mic-level XLR signal.',
+    ours: 'Feed channels 19 and 20 on the left sub snake.',
+    wrong: 'If one is an active DI and its battery dies, that side goes silent. Phantom power on the channel can also run it.',
+    confirm: ['Behringer model (for example DI100 active or DI400P passive).']
+  },
+  red: Object.assign(VOCAL('Red', 13, 'left sub snake', 'red'), { x: 215, y: 350 }),
+  green: Object.assign(VOCAL('Green', 14, 'left sub snake', 'green'), { x: 335, y: 355 }),
+  leftSub: {
+    label: 'Left sub snake', x: 325, y: 100, gear: '8-channel sub snake', signal: 'mic', kind: 'snake',
+    what: 'A small box with eight XLR inputs, joined into one multicore cable.',
+    flow: 'Each input stays a separate balanced mic-level signal; the multicore just bundles them. That saves running eight long cables across the stage.',
+    ours: 'It sits at the back of the stage, between the keys and the electric. It carries keys L/R (17, 18), electric L/R (19, 20), aux keys L/R (21, 22), and the red and green vocals (13, 14), which use its last two inputs. It runs to the main snake in the snake room.',
+    wrong: 'A dead channel that works when moved to another input points to a bad sub snake input. Keep the multicore out of walkways.',
+    confirm: ['Which sub snake input number each source uses.']
+  },
+
+  /* ---------- Right of stage ---------- */
+  bass: {
+    label: 'Bass', x: 690, y: 95, ch: [23], gear: 'Bass guitar', signal: 'inst', kind: 'source',
+    what: 'The bass guitar, at the back right of the stage, facing forward.',
+    flow: 'A passive bass pickup is a weak, high-impedance source. Plugging it straight into a long cable or a mic input would lose low end and pick up noise, which is why it goes through an active DI.',
+    ours: 'Into a Radial J48 active DI, then channel 23 through the right sub snake. The bassist mixes their own monitor on a P16.',
+    wrong: 'No bass at all: the J48 needs phantom power from channel 23 to run. Check the 48V switch first.'
+  },
+  diBass: {
+    label: 'J48', x: 690, y: 150, ch: [23], gear: 'Radial J48 active DI', signal: 'mic', kind: 'di',
+    what: 'An active DI box. It has electronics inside that need power.',
+    flow: 'It takes its power from the console\'s 48V phantom power, sent back up the XLR cable. It converts the bass\'s weak signal into a strong, balanced mic-level signal.',
+    ours: 'Feeds channel 23 on the right sub snake. Phantom power (48V) must be on for channel 23 at the FOH X32.',
+    wrong: 'Silent: 48V is off. Hum: try the ground lift. The thru jack can feed a bass amp if one is added.'
+  },
+  mal: {
+    label: 'Malayalam keys', short: 'Mal keys', x: 715, y: 205, ch: [31, 32], gear: 'Stereo keyboard rig', signal: 'inst', kind: 'source',
+    what: 'The keyboard for Malayalam worship, in front of and to the right of the bass, facing the middle of the stage.',
+    flow: 'Stereo unbalanced 1/4" outputs into two mono DIs.',
+    ours: 'Into two mono Radial DIs, then channels 31 and 32 through the right sub snake. The player has their own P16.',
+    wrong: 'Same as the other keys: check for mono output mode, and use the ground lift for hum.'
+  },
+  diMal: {
+    label: 'DIs', x: 735, y: 250, ch: [31, 32], gear: 'Two Radial mono DIs', signal: 'mic', kind: 'di',
+    what: 'Two mono DI boxes, one for each side of the Malayalam keys.',
+    flow: 'Each converts one unbalanced output into one balanced, mic-level XLR signal.',
+    ours: 'Feed channels 31 and 32 on the right sub snake.',
+    wrong: 'Hum: ground lift. One side silent: swap the two cables to find out whether the keyboard or the DI is the problem.',
+    confirm: ['Exact Radial model.']
+  },
+  tb: {
+    label: 'Talkbacks', x: 615, y: 205, ch: [1, 2], gear: 'Two talkback mics', signal: 'mic', kind: 'source',
+    what: 'Mics the band and the worship leader use to talk to each other and to the tech team without the congregation hearing.',
+    flow: 'Ordinary mic-level signals. What makes them talkback is the routing: they go to the monitor mixes and not to the mains.',
+    ours: 'Main talkback (ch 1, Shure Beta 58A) and band talkback (ch 2, Samson). They sit in front of the bass or the Malayalam keys, but move around. Both plug into the right sub snake.',
+    wrong: 'Talkback heard in the room or on the stream: the channel is assigned to the main mix. It should only feed monitor buses.',
+    confirm: ['Whether the talkbacks are assigned to the main mix at all.'],
+    parts: [
+      { id: 'tb1', label: 'Main talkback', ch: [1], gear: 'Shure Beta 58A', text: 'A supercardioid dynamic mic: tighter pickup than a 58, so it hears less of the stage around it.' },
+      { id: 'tb2', label: 'Band talkback', ch: [2], gear: 'Samson mic', text: 'The band\'s talkback, on the right sub snake.' }
+    ]
+  },
+  joji: {
+    label: 'Joji', x: 450, y: 385, ch: [12], gear: 'Shure KSM9', signal: 'mic', kind: 'source',
+    what: 'A handheld condenser vocal mic, used by a singer who brings his own.',
+    flow: 'Unlike the 58s, a condenser has electronics inside that need 48V phantom power from the console. It is more detailed and more sensitive, so it needs less gain.',
+    ours: 'Ch 12, at the front of the stage, into the right sub snake. The KSM9 has a switch for cardioid or supercardioid pickup.',
+    wrong: 'Silent: 48V phantom power is off on channel 12. Because it is more sensitive than a 58, it can feed back sooner in a wedge.'
+  },
+  blue: Object.assign(VOCAL('Blue', 15, 'right sub snake', 'blue'), { x: 565, y: 355 }),
+  yellow: Object.assign(VOCAL('Yellow', 16, 'right sub snake', 'yellow'), { x: 685, y: 350 }),
+  rightSub: {
+    label: 'Right sub snake', x: 565, y: 100, gear: '8-channel sub snake', signal: 'mic', kind: 'snake',
+    what: 'The second 8-input sub snake, on the right of the stage.',
+    flow: 'Bundles eight balanced mic-level signals into one multicore that runs to the snake room.',
+    ours: 'It sits at the back of the stage, between the electric and the bass. It carries main and band talkback (1, 2), Joji (12), blue and yellow (15, 16), bass (23), and Malayalam keys L/R (31, 32).',
+    wrong: 'Same as the left sub snake: if a source works on another input, the input is bad. Label every input.',
+    confirm: ['Which sub snake input number each source uses.']
+  },
+
+  /* ---------- Front of house (the congregation side) ---------- */
+  roomL: {
+    label: 'Room mic L', x: 140, y: 445, ch: [5], gear: 'Rode mic', signal: 'mic', kind: 'source',
+    what: 'A mic on the left side of the stage, pointed at the congregation.',
+    flow: 'Picks up the room and the congregation singing. It runs directly to the snake room instead of through a sub snake.',
+    ours: 'Ch 5. Paired with the right room mic on channel 6.',
+    wrong: 'Room mics in the main speakers can cause feedback. They usually go to the livestream mix, so it sounds like a room full of people.',
+    confirm: ['Rode model (most need phantom power).', 'Whether the room mics feed the stream only.']
+  },
+  roomR: {
+    label: 'Room mic R', x: 750, y: 445, ch: [6], gear: 'Rode mic', signal: 'mic', kind: 'source',
+    what: 'A mic on the right side of the stage, pointed at the congregation.',
+    flow: 'Picks up the room and the congregation singing. It runs directly to the snake room.',
+    ours: 'Ch 6. Paired with the left room mic on channel 5.',
+    wrong: 'Left and right levels should match, or the stream sounds lopsided.',
+    confirm: ['Rode model.']
+  },
+  wireless: {
+    label: 'Wireless 1–4', x: 620, y: 540, ch: [8, 9, 10, 11], gear: 'Sennheiser e835 handhelds', signal: 'wireless', kind: 'source',
+    what: 'Four wireless handheld mics for speaking: preaching, announcements, readings.',
+    flow: 'The e835 capsule is a dynamic, cardioid mic. A transmitter in the handle sends the signal by radio to a matching receiver in the snake room, which turns it back into an XLR signal.',
+    ours: 'Wireless 1 to 4 on channels 8 to 11. The receivers live in the snake room and plug directly into the main snake.',
+    wrong: 'Dead batteries are the number one problem: fresh batteries every service. Dropouts happen when a body or wall blocks the radio path.',
+    confirm: ['Wireless system model and frequency band.']
+  },
+
+  /* ---------- Drum cage ---------- */
+  kit: {
+    label: 'Drum kit', x: 940, y: 375, ch: [24, 25, 26, 27, 28, 29, 30], gear: 'Seven mics', signal: 'mic', kind: 'source',
+    what: 'The drum kit, inside the drum cage to the right of the stage. The cage keeps loud drums from bleeding into every other mic.',
+    flow: 'Seven mics, each close to one drum, plus two overheads for the cymbals and the whole kit. All go into the drum sub snake.',
+    ours: 'Kick (24), snare top (25), snare bottom (26), hi tom (27), low tom (28), overheads L and R (29, 30). The drummer mixes their own monitor on a P16.',
+    wrong: 'Pick a mic below to see its own notes.',
+    parts: [
+      { id: 'kick', label: 'Kick', ch: [24], gear: 'Audix D6', text: 'A dynamic mic built for kick drums, with a scooped sound that brings out the low thump and the beater click.' },
+      { id: 'snt', label: 'Snare top', ch: [25], gear: 'Shure SM57', text: 'The classic snare mic: dynamic, rugged, and pointed at the drum head.' },
+      { id: 'snb', label: 'Snare bottom', ch: [26], gear: 'Shure SM57', text: 'Picks up the snare wires underneath. It faces the opposite way from the top mic, so its polarity should be flipped (the Ø button on the X32) or the two mics cancel each other out.' },
+      { id: 'tom1', label: 'Hi tom', ch: [27], gear: 'Audix D2', text: 'A small dynamic tom mic.' },
+      { id: 'tom2', label: 'Low tom', ch: [28], gear: 'Audix D4', text: 'A dynamic tom mic tuned for bigger, lower drums.' },
+      { id: 'ohl', label: 'Overhead L', ch: [29], gear: 'Behringer C2', text: 'A small condenser mic above the kit. Condensers need 48V phantom power. The two overheads make the stereo picture of the kit.' },
+      { id: 'ohr', label: 'Overhead R', ch: [30], gear: 'Behringer C2', text: 'The right overhead. Both overheads should be the same distance from the snare, or the snare sounds thin.' }
+    ]
+  },
+  click: {
+    label: 'Click', x: 1075, y: 320, ch: [4], gear: 'Playback device', signal: 'inst', kind: 'source',
+    what: 'The click track: a metronome, and often spoken cues, that keeps the band in time.',
+    flow: 'It comes out of a 1/8" headphone jack and is split into two 1/4" plugs. One goes into a Behringer DI.',
+    ours: 'Ch 4, through the drum sub snake. It goes to the band\'s monitors only.',
+    wrong: 'Click heard in the room or on the stream: channel 4 is assigned to the main mix. It must never be.',
+    confirm: ['What plays the click (phone, laptop, sample pad).']
+  },
+  diClick: {
+    label: 'DI', x: 1075, y: 355, ch: [4], gear: 'Behringer DI', signal: 'mic', kind: 'di',
+    what: 'A DI box for the click.',
+    flow: 'Converts the click\'s unbalanced signal into balanced mic level.',
+    ours: 'Feeds channel 4 on the drum sub snake.',
+    wrong: 'Hum in the band\'s ears: try the ground lift.'
+  },
+  spd: {
+    label: 'SPD', x: 1075, y: 442, ch: [7], gear: 'Sample pad', signal: 'inst', kind: 'source',
+    what: 'An electronic sample pad the drummer plays for extra sounds.',
+    flow: 'A 1/4" output into a Behringer DI. From the DI it skips the drum sub snake and runs straight to the main snake.',
+    ours: 'Ch 7.',
+    wrong: 'Very loud hits: the pad\'s output level is set too high, so turn it down at the pad, not just at the console.'
+  },
+  diSpd: {
+    label: 'DI', x: 1075, y: 466, ch: [7], gear: 'Behringer DI', signal: 'mic', kind: 'di',
+    what: 'A DI box for the SPD.',
+    flow: 'Converts its unbalanced output into balanced mic level.',
+    ours: 'Runs directly to the main snake in the snake room, channel 7.',
+    wrong: 'Hum: ground lift.'
+  },
+  drumTB: {
+    label: 'Drum talkback', x: 840, y: 440, ch: [3], gear: 'Samson mic', signal: 'mic', kind: 'source',
+    what: 'The drummer\'s talkback mic.',
+    flow: 'A mic-level signal that runs directly to the main snake.',
+    ours: 'Ch 3. Goes to monitors, not the mains.',
+    wrong: 'Heard in the room: it is assigned to the main mix.'
+  },
+  drumSub: {
+    label: 'Drum snake', x: 1000, y: 385, gear: '8-channel sub snake', signal: 'mic', kind: 'snake',
+    what: 'The drum cage\'s own sub snake.',
+    flow: 'Bundles the kit mics and click into one multicore to the snake room.',
+    ours: 'It sits to the right of the kit. It carries the click (4), kick (24), snare top and bottom (25, 26), hi and low tom (27, 28), and overheads (29, 30).',
+    wrong: 'Overheads silent: phantom power is off on channels 29 and 30.'
+  },
+
+  /* ---------- Snake room ---------- */
+  receivers: {
+    label: 'Receivers', x: 960, y: 215, ch: [8, 9, 10, 11], gear: 'Wireless receivers', signal: 'mic', kind: 'hub',
+    what: 'The receivers for the four wireless speaking mics.',
+    flow: 'Each one picks up its transmitter by radio and puts out an ordinary XLR signal.',
+    ours: 'Four receivers in the snake room, plugged directly into the main snake for channels 8 to 11.',
+    wrong: 'Check the receiver\'s signal (RF) and audio (AF) meters: no RF means the mic is off or out of range.'
+  },
+  mainSnake: {
+    label: 'Main snake', x: 870, y: 205, gear: 'Analog multicore', signal: 'mic', kind: 'hub',
+    what: 'The main analog snake: one thick multicore cable carrying every stage input to the FOH booth.',
+    flow: 'Each channel stays a separate balanced mic-level signal all the way to the X32\'s preamps. Nothing is converted to digital until it reaches FOH.',
+    ours: 'It sits under the monitor mixer in the snake room. The three sub snakes plug in here, along with the room mics, drum talkback, SPD, and wireless receivers. Most snake channels match the X32 channel numbers.',
+    wrong: 'A channel dead on every source points to the snake channel or its connector. The snake carries tiny signals a long way, so keep connectors clean and dry.',
+    confirm: ['Total channel count, and whether it has returns back to the stage.']
+  },
+  monMixer: {
+    label: 'Monitor mixer', x: 930, y: 95, gear: 'Separate monitor console', signal: 'digital', kind: 'hub',
+    what: 'A second mixer that builds what the musicians and singers hear on stage, separately from what the congregation hears.',
+    flow: 'It receives all 32 inputs digitally from the FOH X32 over AES50, after the FOH preamps. Gain is set once, at FOH, so a gain change at FOH also changes every monitor mix.',
+    ours: 'In the snake room, above the snake. It builds a mono bus for each of the five singers, feeds the P16 system, and connects to a router so singers can adjust their own mix from MX-Bus or MX-Q.',
+    wrong: 'All monitors suddenly louder or quieter: someone changed gain at FOH. Monitors silent but FOH fine: check the AES50 cable and the monitor mixer\'s input routing.',
+    confirm: ['Model of the monitor mixer.', 'Which bus feeds each singer.']
+  },
+  p16d: {
+    label: 'P16-D', x: 1060, y: 150, gear: 'Behringer P16-D', signal: 'digital', kind: 'hub',
+    what: 'A distributor for the P16 personal monitor system.',
+    flow: 'It takes the Ultranet stream from the monitor mixer and sends it, with power, to each P16 mixer over ethernet cable. Ultranet carries 16 channels, so the monitor engineer picks which 16 sources the band can mix.',
+    ours: 'Feeds the P16s for bass, electric, keys, Malayalam keys and drums. The aux keys P16 is daisy-chained from the keys P16.',
+    wrong: 'One P16 dark: swap its cable or port. All dark: check the cable from the monitor mixer.'
+  },
+  router: {
+    label: 'Router', x: 850, y: 150, gear: 'Network router', signal: 'digital', kind: 'hub',
+    what: 'A network router connected to the monitor mixer.',
+    flow: 'It carries control data, not audio. Phones and tablets on its Wi-Fi can change the monitor mixer\'s settings.',
+    ours: 'Singers join its Wi-Fi and use MX-Bus or MX-Q to adjust their own in-ear mixes.',
+    wrong: 'App will not connect: the phone is on the wrong Wi-Fi network, or the router is off.'
+  },
+
+  /* ---------- Side space ---------- */
+  xvive: {
+    label: 'Xvive ×5', x: 58, y: 215, gear: 'Xvive U45 in-ear systems', signal: 'monitor', kind: 'hub',
+    what: 'Five wireless in-ear transmitters, one for each singer, each paired with a receiver pack the singer wears.',
+    flow: 'Each transmitter takes one mono mix and sends it by radio to its receiver. They are raised high on a mic stand and bar so the radio path to the singers stays clear.',
+    ours: 'In the side space to the left of the stage. Five lines come from the monitor mixer: one long XLR, plus four over a 4-channel XLR-over-etherCON run.',
+    wrong: 'Dropouts: a body or object is blocking the line of sight, or the pair has lost its link. Charge every pack before service.',
+    confirm: ['Which transmitter belongs to which singer.']
+  },
+
+  /* ---------- P16 personal mixers ---------- */
+  p16Keys:  { label: 'P16', x: 150, y: 80,  gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'keys', what: 'The keys player\'s personal mixer.', ours: 'Fed from the P16-D. The aux keys P16 is daisy-chained from this one.' },
+  p16Aux:   { label: 'P16', x: 125, y: 255, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'aux keys', what: 'The aux keys player\'s personal mixer.', ours: 'Daisy-chained from the keys P16, so it depends on that one staying connected.' },
+  p16Elec:  { label: 'P16', x: 480, y: 130, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'electric', what: 'The electric guitarist\'s personal mixer.', ours: 'Fed from the P16-D.' },
+  p16Bass:  { label: 'P16', x: 720, y: 120, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'bass', what: 'The bassist\'s personal mixer.', ours: 'Fed from the P16-D.' },
+  p16Mal:   { label: 'P16', x: 750, y: 160, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'Malayalam keys', what: 'The Malayalam keys player\'s personal mixer.', ours: 'Fed from the P16-D.' },
+  p16Drums: { label: 'P16', x: 845, y: 320, gear: 'Behringer P16-M', signal: 'digital', kind: 'p16', for: 'drums', what: 'The drummer\'s personal mixer.', ours: 'Fed from the P16-D.' },
+
+  /* ---------- FOH ---------- */
+  x32: {
+    label: 'FOH X32', x: 440, y: 630, gear: 'Behringer X32', signal: 'mic', kind: 'board', console: true,
+    what: 'The front-of-house (FOH) mixer: where the congregation\'s mix is built.',
+    flow: 'The analog snake lands on the X32\'s preamps, which add gain and turn each channel into digital audio. From there every channel goes through its processing, out to Waves and back, into buses, and on to the speakers. All inputs are also sent on to the monitor mixer over AES50.',
+    ours: 'Gain and phantom power for all 32 inputs are set here. Open the console view to follow a channel through the X32 itself.',
+    wrong: 'Distortion on loud parts: gain is too high, so lower it at the preamp, not the fader.',
+    confirm: ['X32 model and firmware.']
+  },
+  mac: {
+    label: 'Mac mini', x: 320, y: 630, gear: 'Waves SuperRack Performer', signal: 'digital', kind: 'board',
+    what: 'A Mac mini running Waves SuperRack Performer, which hosts Waves plugins (EQs, compressors, reverbs) on the computer.',
+    flow: 'Selected channels leave the X32 digitally, run through plugins on the Mac, and come back into the same channel. This is called an insert. The round trip adds a few milliseconds of delay, set by SuperRack\'s buffer size.',
+    ours: 'Open the console view to see where the insert sits in a channel.',
+    wrong: 'If the Mac sleeps, updates or loses its connection, channels with an active insert go silent. Know how to bypass the insert on the X32.',
+    confirm: ['How audio travels between the X32 and the Mac (most likely the X-USB card).', 'Buffer size, and which plugins are on which channels.']
+  },
+  outputs: {
+    label: 'Mains, subs, stream', short: 'Mains + stream', x: 190, y: 630, gear: 'Speakers and stream feed', signal: 'line', kind: 'board',
+    what: 'Where the FOH mix leaves the console: the main speakers, the subwoofers, and the livestream.',
+    flow: 'The console sends line-level signals out to amplifiers or powered speakers, which turn them into sound. The stream gets its own mix, because what sounds right in the room rarely sounds right on headphones.',
+    ours: 'To be filled in from the scene file.',
+    wrong: 'Feedback: a mic is too loud for where it is pointed. Pull that channel\'s fader down first, then find the ringing frequency.',
+    confirm: ['Main speakers, subs, amps, and how the stream is fed.']
+  }
+};
+
+/* Connections. Each goes from -> to in the direction the signal flows. */
+window.WIRES = [
+  // instruments into DIs
+  ['keys', 'diKeys', 'inst'], ['aux', 'diAux', 'inst'], ['electric', 'diElec', 'inst'],
+  ['bass', 'diBass', 'inst'], ['mal', 'diMal', 'inst'], ['click', 'diClick', 'inst'], ['spd', 'diSpd', 'inst'],
+  // into the left sub snake (back of stage, between keys and electric)
+  ['diKeys', 'leftSub', 'mic'], ['diElec', 'leftSub', 'mic'],
+  ['diAux', 'leftSub', 'mic', [[300, 265], [300, 100]]],
+  ['red', 'leftSub', 'mic', [[215, 310], [310, 310], [310, 100]]],
+  ['green', 'leftSub', 'mic', [[335, 325], [318, 325], [318, 100]]],
+  // into the right sub snake (back of stage, between electric and bass)
+  ['diBass', 'rightSub', 'mic'], ['diMal', 'rightSub', 'mic'], ['tb', 'rightSub', 'mic'],
+  ['joji', 'rightSub', 'mic', [[450, 330], [557, 330], [557, 100]]],
+  ['blue', 'rightSub', 'mic'],
+  ['yellow', 'rightSub', 'mic', [[685, 315], [573, 315], [573, 100]]],
+  // drum cage
+  ['kit', 'drumSub', 'mic'], ['diClick', 'drumSub', 'mic'],
+  // runs to the main snake
+  ['leftSub', 'mainSnake', 'mic', [[325, 50], [800, 50], [800, 205]]],
+  ['rightSub', 'mainSnake', 'mic', [[565, 55], [795, 55], [795, 205]]],
+  ['roomL', 'mainSnake', 'mic', [[140, 425], [780, 425], [780, 205]]],
+  ['roomR', 'mainSnake', 'mic', [[750, 425], [780, 425], [780, 205]]],
+  ['drumTB', 'mainSnake', 'mic', [[788, 440], [788, 205]]],
+  ['drumSub', 'mainSnake', 'mic', [[1000, 205]]],
+  ['diSpd', 'mainSnake', 'mic', [[1092, 466], [1092, 255], [880, 255], [880, 205]]],
+  ['wireless', 'receivers', 'wireless'], ['receivers', 'mainSnake', 'mic'],
+  // to FOH, back left of center in the room
+  ['mainSnake', 'x32', 'mic', [[850, 205], [850, 266], [1112, 266], [1112, 620], [460, 620]]],
+  ['x32', 'mac', 'digital', null, true], ['x32', 'outputs', 'line', [[440, 676], [190, 676]]],
+  // monitor world
+  ['x32', 'monMixer', 'digital', [[460, 640], [1124, 640], [1124, 95]]],
+  ['router', 'monMixer', 'digital'],
+  ['monMixer', 'p16d', 'digital', [[930, 150]]],
+  ['p16d', 'p16Keys', 'digital', [[1095, 150], [1095, 42], [150, 42]]], ['p16Keys', 'p16Aux', 'digital'],
+  ['p16d', 'p16Elec', 'digital', [[1095, 150], [1095, 42], [480, 42]]], ['p16d', 'p16Bass', 'digital', [[1095, 150], [1095, 42], [720, 42]]],
+  ['p16d', 'p16Mal', 'digital', [[1095, 150], [1095, 42], [750, 42]]],
+  ['p16d', 'p16Drums', 'digital', [[1060, 274], [845, 274]]],
+  ['monMixer', 'xvive', 'monitor', [[870, 95], [870, 30], [58, 30]]],
+  ['xvive', 'red', 'wireless'], ['xvive', 'green', 'wireless'], ['xvive', 'joji', 'wireless'],
+  ['xvive', 'blue', 'wireless'], ['xvive', 'yellow', 'wireless']
+];
+
+/* Guided tours: an ordered list of stops. */
+window.TOURS = [
+  { id: 'vocal', name: 'A vocal to the room', stops: ['red', 'leftSub', 'mainSnake', 'x32', 'mac', 'outputs'] },
+  { id: 'ears', name: 'A singer\'s in-ear mix', stops: ['green', 'leftSub', 'mainSnake', 'x32', 'monMixer', 'xvive', 'green'] },
+  { id: 'keys', name: 'Keys through a DI', stops: ['keys', 'diKeys', 'leftSub', 'mainSnake', 'x32', 'outputs'] },
+  { id: 'bass', name: 'Bass to the bassist\'s P16', stops: ['bass', 'diBass', 'rightSub', 'mainSnake', 'x32', 'monMixer', 'p16d', 'p16Bass'] },
+  { id: 'drums', name: 'The drum kit', stops: ['kit', 'drumSub', 'mainSnake', 'x32', 'outputs'] },
+  { id: 'speak', name: 'A wireless speaking mic', stops: ['wireless', 'receivers', 'mainSnake', 'x32', 'outputs'] }
+];
+
+/* Inside the FOH X32: the order a channel's signal travels. */
+window.CONSOLE = [
+  { id: 'c-pre', label: 'Preamp', sub: 'Gain, 48V', what: 'The first and most important control. The preamp raises a tiny mic-level signal to a healthy working level and converts it to digital.', flow: 'Aim for peaks well below the top of the meter. The X32 has plenty of headroom, so a little lower is safer than a little higher. 48V phantom power is switched on here for condensers and active DIs.', ours: 'Phantom needed on: Joji (12), bass J48 (23), overheads (29, 30), and probably the room mics (5, 6).', wrong: 'Clipping (the red light) cannot be fixed later in the chain. Turn the gain down.' },
+  { id: 'c-split', label: 'AES50 split', sub: 'To monitors', branch: true, what: 'Right after the preamp, every input is copied out over AES50 to the monitor mixer.', flow: 'The monitor mixer gets the signal after gain but before any of FOH\'s EQ, compression or faders. FOH processing does not change what the band hears, but FOH gain does.', ours: 'All 32 inputs, over one etherCON cable to the snake room.', wrong: 'Changing gain during a service changes every monitor mix. Set gain at soundcheck, then leave it.' },
+  { id: 'c-hpf', label: 'Low cut', sub: 'High-pass filter', what: 'Removes the low rumble a source does not need.', flow: 'Below the frequency you set, the signal is turned down. Vocals rarely need anything under about 100 Hz.', ours: 'On every vocal and speaking mic. Off for kick, bass and keys.', wrong: 'Too high and a voice sounds thin. Too low and stage rumble and handling noise get through.' },
+  { id: 'c-gate', label: 'Gate', sub: 'Noise gate', what: 'Mutes a channel when the signal drops below a threshold.', flow: 'Useful on toms to cut bleed between hits.', ours: 'To be filled in from the scene file.', wrong: 'A threshold set too high cuts off quiet notes.' },
+  { id: 'c-eq', label: 'EQ', sub: 'Tone shaping', what: 'Turns specific frequency ranges up or down.', flow: 'Cutting usually sounds more natural than boosting. Cut the mud first; boost only if something is missing.', ours: 'To be filled in from the scene file. The X32 can swap the order of EQ and compressor.', wrong: 'Big boosts invite feedback.' },
+  { id: 'c-comp', label: 'Compressor', sub: 'Dynamics', what: 'Evens out volume by turning down the loudest moments.', flow: 'Threshold sets when it starts working; ratio sets how hard. A singer who goes from a whisper to a belt stays easier to hear.', ours: 'To be filled in from the scene file.', wrong: 'Too much compression sounds squashed and raises the stage noise between phrases.' },
+  { id: 'c-ins', label: 'Insert', sub: 'Waves on the Mac', branch: true, what: 'The channel leaves the X32, runs through Waves SuperRack Performer on the Mac mini, and returns to the same channel.', flow: 'The round trip adds a few milliseconds of delay. If one mic of a pair is inserted and the other is not, the two can sound phasey.', ours: 'To be filled in: which plugins sit on which channels, and the buffer size.', wrong: 'If the Mac stops, inserted channels go silent. Bypass the insert on the X32 to get them back.' },
+  { id: 'c-fad', label: 'Fader, mute, DCAs', sub: 'Level', what: 'The fader sets how much of the channel goes into the main mix. DCAs move groups of faders together.', flow: 'Faders change level after all the processing, so moving them does not change how hard the compressor works.', ours: 'To be filled in from the scene file: our DCA groups.', wrong: 'If a fader is near the bottom and the channel is still too loud, the gain is too high.' },
+  { id: 'c-bus', label: 'Buses', sub: 'Effects, stream', what: 'Buses combine channels into extra mixes: reverb sends, the livestream, and subgroups.', flow: 'A pre-fader send ignores the channel fader; a post-fader send follows it. Effects sends are usually post-fader.', ours: 'To be filled in from the scene file.', wrong: 'Reverb still audible after a fader comes down: the reverb send is pre-fader.' },
+  { id: 'c-main', label: 'Main and matrix', sub: 'Outputs', what: 'The main L/R mix goes to the speakers. Matrix outputs make blends of the main mix and buses for other destinations.', flow: 'A matrix can feed the livestream a different balance than the room hears.', ours: 'To be filled in from the scene file.', wrong: 'Nothing anywhere: check the main fader and the main mute.' }
+];

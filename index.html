@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Church Signal Path</title>
+<meta name="description" content="Follow every signal on our stage, from mic to mixer, and learn what happens at each step.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<!--BODY-->
+<header class="top">
+  <div class="brand">
+    <h1>Follow the signal</h1>
+    <p>Every cable on our stage, from the mic to the mixer. Click anything to see what happens there.</p>
+  </div>
+  <nav class="views" aria-label="View">
+    <button id="v-stage" class="view on" aria-pressed="true">Stage</button>
+    <button id="v-console" class="view" aria-pressed="false">Inside the X32</button>
+  </nav>
+</header>
+
+<div class="tourbar">
+  <label for="tour">Follow a signal</label>
+  <select id="tour"><option value="">Pick a path…</option></select>
+  <button id="prev" class="step" disabled aria-label="Previous stop">‹ Back</button>
+  <span id="count" class="count"></span>
+  <button id="next" class="step" disabled aria-label="Next stop">Next ›</button>
+</div>
+
+<main class="work">
+  <section class="map" aria-label="Stage map">
+    <div id="stageView" class="scroll"><svg id="stage" viewBox="0 0 1140 720" role="img" aria-label="Top-down map of the stage, snake room and FOH booth"></svg></div>
+    <div id="consoleView" class="console" hidden></div>
+    <ul id="legend" class="legend"></ul>
+    <p class="orient">Drawn from above, as seen from the congregation. Not to scale.</p>
+  </section>
+  <aside id="panel" class="panel" aria-live="polite"></aside>
+</main>
+<!--/BODY-->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
