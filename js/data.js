@@ -234,10 +234,10 @@ window.STOPS = {
     wrong: 'Hum: ground lift.'
   },
   drumTB: {
-    label: 'Drum talkback', x: 960, y: 265, ch: [3], gear: 'Samson mic', signal: 'mic', kind: 'source',
+    label: 'Drum talkback', x: 1010, y: 262, ch: [3], gear: 'Samson mic', signal: 'mic', kind: 'source',
     what: 'The drummer\'s talkback mic.',
     flow: 'A mic-level signal that runs directly to the main snake.',
-    ours: 'Ch 3, at the back of the drum cage next to the drummer. It runs directly to the main snake and goes to monitors, not the mains.',
+    ours: 'Ch 3, at the back of the drum cage next to the drummer, near the drum P16. It runs directly to the main snake and goes to monitors, not the mains.',
     wrong: 'Heard in the room: it is assigned to the main mix.'
   },
   drumSub: {
@@ -250,10 +250,10 @@ window.STOPS = {
 
   /* ---------- Snake room ---------- */
   receivers: {
-    label: 'Receivers', x: 1035, y: 200, ch: [8, 9, 10, 11], gear: 'Wireless receivers', signal: 'mic', kind: 'hub',
+    label: 'Receivers', x: 912, y: 182, ch: [8, 9, 10, 11], gear: 'Wireless receivers', signal: 'mic', kind: 'hub',
     what: 'The receivers for the four wireless speaking mics.',
     flow: 'Each one picks up its transmitter by radio and puts out an ordinary XLR signal.',
-    ours: 'Four receivers in the snake room, right next to the main snake, plugged directly into it for channels 8 to 11.',
+    ours: 'Four receivers in the snake room, just to the left of the main snake, plugged directly into it for channels 8 to 11.',
     wrong: 'Check the receiver\'s signal (RF) and audio (AF) meters: no RF means the mic is off or out of range.'
   },
   mainSnake: {
@@ -412,7 +412,7 @@ window.WIRES = [
   ['rightSub', 'mainSnake', 'mic', [[565, 55], [795, 55], [795, 195]]],
   ['roomL', 'mainSnake', 'mic', [[120, 300], [120, 42], [805, 42], [805, 195]]],
   ['roomR', 'mainSnake', 'mic', [[780, 300], [780, 195]]],
-  ['drumTB', 'mainSnake', 'mic', [[960, 195]]],
+  ['drumTB', 'mainSnake', 'mic', [[1010, 195]]],
   ['drumSub', 'mainSnake', 'mic', [[1070, 195]]],
   ['diSpd', 'mainSnake', 'mic', [[825, 350], [825, 195]]],
   ['wireless', 'receivers', 'wireless'], ['receivers', 'mainSnake', 'mic'],
