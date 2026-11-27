@@ -151,7 +151,7 @@ window.STOPS = {
     wrong: 'Silent: 48V phantom power is off on channel 12. Because it is more sensitive than a 58, it can feed back sooner in a wedge.'
   },
   blue: Object.assign(VOCAL('Blue', 15, 'right sub snake', 'blue'), { x: 565, y: 300 }),
-  yellow: Object.assign(VOCAL('Yellow', 16, 'right sub snake', 'yellow'), { x: 685, y: 300 }),
+  yellow: Object.assign(VOCAL('Yellow', 16, 'right sub snake', 'yellow'), { x: 648, y: 300 }),
   rightSub: {
     label: 'Right sub snake', x: 565, y: 75, gear: '8-channel sub snake', signal: 'mic', kind: 'snake',
     what: 'The second 8-input sub snake, on the right of the stage.',
@@ -404,7 +404,7 @@ window.WIRES = [
   ['tbBand', 'rightSub', 'mic', [[260, 150], [260, 58], [555, 58]]],
   ['joji', 'rightSub', 'mic', [[470, 400], [770, 400], [770, 58], [565, 58]]],
   ['blue', 'rightSub', 'mic'],
-  ['yellow', 'rightSub', 'mic', [[685, 280], [580, 280], [580, 75]]],
+  ['yellow', 'rightSub', 'mic', [[648, 280], [580, 280], [580, 75]]],
   // drum cage
   ['kit', 'drumSub', 'mic'], ['diClick', 'drumSub', 'mic'],
   // runs to the main snake
