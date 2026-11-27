@@ -250,10 +250,10 @@ window.STOPS = {
 
   /* ---------- Snake room ---------- */
   receivers: {
-    label: 'Receivers', x: 1050, y: 80, ch: [8, 9, 10, 11], gear: 'Wireless receivers', signal: 'mic', kind: 'hub',
+    label: 'Receivers', x: 1035, y: 200, ch: [8, 9, 10, 11], gear: 'Wireless receivers', signal: 'mic', kind: 'hub',
     what: 'The receivers for the four wireless speaking mics.',
     flow: 'Each one picks up its transmitter by radio and puts out an ordinary XLR signal.',
-    ours: 'Four receivers in the snake room, plugged directly into the main snake for channels 8 to 11.',
+    ours: 'Four receivers in the snake room, right next to the main snake, plugged directly into it for channels 8 to 11.',
     wrong: 'Check the receiver\'s signal (RF) and audio (AF) meters: no RF means the mic is off or out of range.'
   },
   mainSnake: {
@@ -415,7 +415,7 @@ window.WIRES = [
   ['drumTB', 'mainSnake', 'mic', [[960, 195]]],
   ['drumSub', 'mainSnake', 'mic', [[1070, 195]]],
   ['diSpd', 'mainSnake', 'mic', [[825, 350], [825, 195]]],
-  ['wireless', 'receivers', 'wireless'], ['receivers', 'mainSnake', 'mic', [[1050, 195]]],
+  ['wireless', 'receivers', 'wireless'], ['receivers', 'mainSnake', 'mic'],
   // to FOH, back of the room left of center
   ['mainSnake', 'x32', 'mic', [[980, 222], [1112, 222], [1112, 585], [230, 585], [230, 610]]],
   ['x32', 'mac', 'digital', null, true],
